@@ -182,7 +182,8 @@ $(function() {
     geometry = new THREE.PlaneGeometry( 300, 300, 50, 50 );
     geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 
-    material = new THREE.MeshLambertMaterial( { color: 0xdddddd } );
+    peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
+    material = new THREE.MeshLambertMaterial( { color: 0xDDDDDD } );
     THREE.ColorUtils.adjustHSV( material.color, 0, 0, 0.9 );
 
 
@@ -288,7 +289,7 @@ $(function() {
         var y = sphereBody.position.y;
         var z = sphereBody.position.z;
         var ballBody = new CANNON.RigidBody(1,ballShape);
-        var ballMesh = new THREE.Mesh( ballGeometry, material );
+        var ballMesh = new THREE.Mesh( ballGeometry, peeMaterial );
         world.add(ballBody);
         scene.add(ballMesh);
         ballMesh.castShadow = true;
