@@ -20,7 +20,7 @@ $(function() {
   var blocker = document.getElementById( 'blocker' );
   var instructions = document.getElementById( 'instructions' );
 
-  /*var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+  var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
   if ( havePointerLock ) {
 
@@ -96,10 +96,7 @@ $(function() {
 
     instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
 
-  }*/
-
-  instructions.style.display = 'none';
-  blocker.style.display = 'none';
+  }
 
   initCannon();
   init();
@@ -276,7 +273,7 @@ $(function() {
   var dt = 1/60;
   function animate() {
     requestAnimationFrame( animate );
-    if ( /*controls.enabled*/ true ) {
+    if ( controls.enabled ) {
       Game.world.step(dt);
       player.updateBalls();
 
@@ -287,7 +284,7 @@ $(function() {
       }
 
       // Shoot ballz
-      if ( /*controls.enabled == true*/ true ) { player.pee(); }
+      if ( controls.enabled == true ) { player.pee(); }
     }
 
     controls.update( Date.now() - time );
