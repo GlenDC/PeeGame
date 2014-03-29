@@ -27,3 +27,17 @@ var port = process.env.PORT || 3000;
 var server = require('http').createServer(app).listen(port);
 app.set('title', 'Pee Game');
 console.log("Starting server on port " + port);
+
+
+//SOCKETS.IO STUFF
+
+// Create a Socket.IO server and attach it to the http server
+var io = require('socket.io').listen(server);
+
+// Reduce the logging output of Socket.IO
+io.set('log level', 1);
+io.sockets.on('connection', function (socket) {
+    socket.on('gyro_data', function (data) {
+        console.log(data);
+    });
+});

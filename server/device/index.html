@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="js/gyro.js"></script>
+    <script src="js/socket.io.min.js"></script>
 </head>
 <body>
 
@@ -15,9 +16,14 @@
 <script>
     $(function () {
         var gyro = gyrojs();
+        var socket = io.connect('http://localhost:3000');
         $('#features').html = gyro.getFeatures();
+        var sendGyroData = function (o) {
+            socket.emit('gyro_data', { gyro: o });
+        };
         gyro.startTracking(function (o) {
             var b = $('#example');
+            sendGyroData(o);
             b.html("<p> x = " + o.x + "</p>" +
                     "<p> y = " + o.y + "</p>" +
                     "<p> z = " + o.z + "</p>" +
