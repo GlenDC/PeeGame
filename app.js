@@ -88,9 +88,8 @@ app.get('/device', function (req, res) {
     res.redirect('server/device/index.html');
 });
 
-
+/** PLAYERS CONTAINS ALL ACTIVE PLAYERS*/
 var players = [];
-
 
 
 //SOCKETS.IO STUFF
@@ -117,15 +116,15 @@ io.sockets.on('connection', function (socket) {
         if (players.length == 0) {
             players.push(player);
         } else {
+            console.log("players in the room ");
             for (var i in players) {
 
-                console.log("in sendtoMothership");
-                console.log(players[i].player.uid);
+                console.log("uid = " + players[i].player.uid);
 
                 var val = players[i].player;
                 if (val.uid == player.player.uid) {
                     detected = true;
-                    console.log(players[i]['player'].gyro);
+//                    console.log(players[i]['player'].gyro);
 
                     players[i]['player'].gyro = data.gyro;
 
@@ -144,8 +143,8 @@ io.sockets.on('connection', function (socket) {
 
 
         if (players.length > 0) {
-            console.log("ins player_data");
-            console.dir(players[0].player.gyro);
+//            console.log("ins player_data");
+//            console.dir(players[0].player.gyro);
         }
     });
     self_socket.emit("mothership", {init: "server here"});
