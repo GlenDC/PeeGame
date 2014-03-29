@@ -1,0 +1,18 @@
+.outside {
+    max-width: 700px;
+    height: 100%;
+    width: 90%;
+    margin: 0 auto;
+    position: relative;
+}
+.inside {
+    height: 100%;
+    text-align: center;
+}
+
+.inside img.penis {
+    height: 100%;
+}
+.inside img.druppels {
+
+}
