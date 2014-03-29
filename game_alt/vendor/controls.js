@@ -36,11 +36,6 @@ var PointerLockControls = function ( camera, cannonBody ) {
   mouseRotation.y = 0;
   mouseRotation.z = 0;
 
-  var vectorForward = new THREE.Vector3();
-  vectorForward.x = 0;
-  vectorForward.y = 0;
-  vectorForward.z = 1;
-
   var onMouseMove = function ( event ) {
     if ( scope.enabled === false ) return;
 
@@ -96,8 +91,8 @@ var PointerLockControls = function ( camera, cannonBody ) {
     */
 
     // Convert velocity to world coordinates
-    quat.setFromEuler({x:pitchObject.rotation.x, y:yawObject.rotation.y, z:0},"XYZ");
-    quat.multiplyVector3(inputVelocity);
+    // quat.setFromEuler({x:pitchObject.rotation.x, y:yawObject.rotation.y, z:0},"XYZ");
+    // quat.multiplyVector3(inputVelocity);
 
     // Add to the object
     velocity.x += inputVelocity.x;
