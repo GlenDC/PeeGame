@@ -5,7 +5,7 @@
 .container .wrapper{
     width: 300px;
     margin: 0 auto;
-    padding: 10px;
+    padding: 5px;
 }
 
 .center{
@@ -39,8 +39,15 @@ img.penis:hover {
     -webkit-animation-timing-function: linear;
 }
 
-img.druppels {
-
+.druppels {
+    position: relative;
+    z-index: -1;
+    opacity: 0;
+    background-image: url(../img/druppels.svg);
+    background-repeat:repeat-y;
+    height: 1000px;
+    margin: 0 auto;
+    width: 44px;
 }
 
 .dick-name {
@@ -135,44 +142,39 @@ img.druppels {
 
 .topTobottom {
     animation-name: topTobottom;
-    animation-duration:  .5s;
+    animation-duration:  5s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 
     -moz-animation-name: topTobottom;
-    -moz-animation-duration:  2s;
+    -moz-animation-duration: 5s;
     -moz-animation-iteration-count: infinite;
     -moz-animation-timing-function: linear;
 
     -webkit-animation-name: topTobottom;
-    -webkit-animation-duration: 2s;
+    -webkit-animation-duration: 5s;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-timing-function: linear;
 }
 
 @keyframes topTobottom {
     0% {
-        opacity: 0;
-        -webkit-transform: translateY(2000px);
-        -ms-transform: translateY(2000px);
-        transform: translateY(2000px);
+        opacity: 1;
+        background-position: 0;
     }
     100% {
-        -webkit-transform: translateY(-500px);
-        -ms-transform: translateY(-500px);
-        transform: translateY(-500px);
+        opacity: 1;
+        background-position: 0 -1000px;
     }
 }
 
 @-webkit-keyframes topTobottom {
     0% {
-        -webkit-transform: translateY(2000px);
-        -ms-transform: translateY(2000px);
-        transform: translateY(2000px);
+        opacity: 1;
+        background-position: 0;
     }
     100% {
-        -webkit-transform: translateY(-500px);
-        -ms-transform: translateY(-500px);
-        transform: translateY(-500px);
+        opacity: 1;
+        background-position: 0 -1000px;
     }
 }
