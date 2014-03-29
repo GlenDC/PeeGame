@@ -4,6 +4,8 @@ var express = require('express');
 // Import the 'path' module (packaged with Node.js)
 var path = require('path');
 
+var util = require('util');
+
 // Create a new instance of Express
 var app = express();
 // Create a simple Express application
@@ -47,12 +49,28 @@ var intToARGB = function (i) {
 }
 
 
-
 //HANDLE POST FORM
 app.post('/connect', function (req, res) {
     console.log("connect request from user incoming: \n" + JSON.stringify(req.body));
-    var name = req.body.uid, color;
+    var name = req.body.uid, color, detected;
     color = intToARGB(hashCode(name));
+
+    var player = {
+        "player": {
+            "uid": req.body.uid,
+            "color": "#" + color
+        }
+    };
+
+    for (var i in players) {
+        val = players[i];
+        if (val == player) {
+            detected = true;
+        }
+    }
+    if (!detected) {
+        players.push(player);
+    }
     req.method = 'get';
     res.redirect('server/device/connected.html?uid=' + name + '&color=' + color);
 });
@@ -66,9 +84,12 @@ app.get('/device', function (req, res) {
 var players = [];
 
 setInterval(function () {
-//    console.dir(players);
-}, 500)
+    util.print("\u001b[2J\u001b[0;0H");
+    console.log("Starting server on port " + port);
+    console.log("Dicks detectes");
+    console.dir(players);
 
+}, 500);
 
 //SOCKETS.IO STUFF
 
@@ -81,19 +102,17 @@ io.sockets.on('connection', function (socket) {
     var self_socket = socket;
 
     var sendToMothership = function (data) {
-        io.sockets.emit("mothership", {player: data});
         var player = {
             "player": {
                 "uid": data.uid,
-                "color": data.color,
+                "color": "#" + data.color,
                 "gyro": data.gyro
             }
         };
-
-        players.push(player);
+        console.log("connection incoming from " + data.uid)
+        io.sockets.emit("mothership", {player: player});
     };
     socket.on('player_data', function (data) {
-        console.log("connection from " + data.uid);
         sendToMothership(data);
     });
     self_socket.emit("mothership", {init: "server here"});
