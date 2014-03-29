@@ -3,19 +3,18 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
-
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link rel="stylesheet" href="../assets/css/app.css"/>
 </head>
 <body>
-
-<form action="/connect" method="post">
-    <input type="text" id="uid" name="uid" autofocus>
-    <input type="hidden" id="color" name="color" value="">
-    <br>
-    <br>
-    <br>
-    <button id="connect" type="submit">UNZIP</button>
-</form>
+<div class="container">
+    <img class="logo" src="../assets/img/logo.svg" alt=""/>
+    <form action="/connect" method="post">
+        <input type="text" id="uid" name="uid" autofocus>
+        <input type="hidden" id="color" name="color" value="" placeholder="Your dick's nick...">
+        <button id="connect" type="submit">UNZIP IT</button>
+    </form>
+</div>
 
 
 <script>
