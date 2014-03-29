@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="js/gyro.js"></script>
+</head>
+<body>
+
+
+<p>gyro.getFeatures: <span id="features"></span></p>
+<span id="example"></span>
+
+
+<script>
+    $(function () {
+        var gyro = gyrojs();
+        $('#features').html = gyro.getFeatures();
+        gyro.startTracking(function (o) {
+            var b = $('#example');
+            b.html("<p> x = " + o.x + "</p>" +
+                    "<p> y = " + o.y + "</p>" +
+                    "<p> z = " + o.z + "</p>" +
+                    "<p> alpha = " + o.alpha + "</p>" +
+                    "<p> beta = " + o.beta + "</p>" +
+                    "<p> gamma = " + o.gamma + "</p>");
+        });
+    });
+</script>
+</body>
+</html>
