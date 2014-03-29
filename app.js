@@ -15,7 +15,7 @@ app.configure(function () {
     app.use(express.logger('dev'));
 
     // Serve static html, js, css, and image files from the 'public' directory
-    app.use(express.static(path.join(__dirname, 'server')));
+    app.use(express.static(path.join(__dirname)));
 
 
 });
@@ -46,15 +46,29 @@ var intToARGB = function (i) {
         (i & 0xFF).toString(16);
 }
 
+
+
 //HANDLE POST FORM
 app.post('/connect', function (req, res) {
     console.log("connect request from user incoming: \n" + JSON.stringify(req.body));
     var name = req.body.uid, color;
     color = intToARGB(hashCode(name));
-
     req.method = 'get';
-    res.redirect('/device/connected.html?uid=' + name + '&color=' + color);
+    res.redirect('server/device/connected.html?uid=' + name + '&color=' + color);
 });
+
+app.get('/device', function (req, res) {
+    req.method = 'get';
+    res.redirect('server/device/index.html');
+});
+
+
+var players = [];
+
+setInterval(function () {
+//    console.dir(players);
+}, 500)
+
 
 //SOCKETS.IO STUFF
 
@@ -68,12 +82,22 @@ io.sockets.on('connection', function (socket) {
 
     var sendToMothership = function (data) {
         io.sockets.emit("mothership", {player: data});
+        var player = {
+            "player": {
+                "uid": data.uid,
+                "color": data.color,
+                "gyro": data.gyro
+            }
+        };
+
+        players.push(player);
     };
     socket.on('player_data', function (data) {
-        console.log(data);
+        console.log("connection from " + data.uid);
         sendToMothership(data);
     });
     self_socket.emit("mothership", {init: "server here"});
-
-
 });
+
+
+
