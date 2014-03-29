@@ -7,25 +7,23 @@ module.exports = function(grunt) {
       '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
 
-    coffee: {
-      compile: {
-        options: {},
-        files: {
-          'dist/game.js': 'src/**/*.coffee'
-        }
-      }
+    concat: {
+      options: { separator: ';', },
+      dist: {
+        src: ['src/**/*.js'],
+        dest: 'dist/game.js',
+      },
     },
     watch: {
-      files: ['src/**/*.coffee'],
-      tasks: ['coffee'],
+      files: ['src/**/*.js'],
+      tasks: ['concat'],
     }
   });
 
   // Default task.
-  grunt.registerTask('default', ['coffee', 'watch']);
+  grunt.registerTask('default', ['concat', 'watch']);
 
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
 };
