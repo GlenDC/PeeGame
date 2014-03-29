@@ -44,6 +44,11 @@ $(function() {
       instructions.style.display = '';
     }
 
+    var loader = new THREE.OBJLoader();
+    loader.load('../res/models/can-maes.obj', function(object) {
+      Game.scene.add(object);
+    });
+
     // Hook pointer lock state change events
     document.addEventListener( 'pointerlockchange', pointerlockchange, false );
     document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
