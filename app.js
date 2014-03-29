@@ -53,7 +53,7 @@ var intToARGB = function (i) {
 app.post('/connect', function (req, res) {
     console.log("connect request from user incoming: \n" + JSON.stringify(req.body));
     var name = req.body.uid, color, detected;
-    color = intToARGB(hashCode(name));
+    color = intToARGB(hashCode(name)).substring(0,6);
 
     var player = {
         "player": {
