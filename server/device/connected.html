@@ -7,7 +7,6 @@
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="../js/gyro.js"></script>
     <script src="../js/socket.io.min.js"></script>
-    <script src="../js/app.js"></script>
     <link rel="stylesheet" href="../assets/css/app.css"/>
     <link rel="stylesheet" href="../assets/css/connected.css"/>
 
@@ -19,8 +18,8 @@
     </div>
 </div>
 <div class="center">
-    <img class="penis" src="../assets/img/penis.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'" class="penis"/>
-    <img src="../assets/img/druppels.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'" class="druppels"/>
+    <img class="bounceInUp penis" src="../assets/img/penis.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'" class="penis"/>
+    <img class="topTobottom" src="../assets/img/druppels.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'" class="druppels"/>
 </div>
 
 <script>
@@ -54,8 +53,8 @@
 
 
         var socket = io.connect(currentURl());
-
-//      $
+        console.log(userColor);
+        $('body').css('background-color', '#' + userColor);
 
         //SETUP Player object
         var player = {

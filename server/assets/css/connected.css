@@ -21,24 +21,23 @@ img.penis {
     display: block;
     width: 170px;
     cursor: pointer;
-    -webkit-animation: bounceInUp .5s ;
-    -moz-animation: bounceInUp .5s;
-    -o-animation: bounceInUp .5s;
-    animation: bounceInUp .5s;
 }
 
 img.penis:hover {
-    -webkit-animation: shake .5s infinite;
-    -moz-animation: shake .5s infinite;
-    -o-animation: shake .5s infinite;
-    animation: shake .5s infinite;
-}
+    animation-name: shake;
+    animation-duration: infinite;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 
-img.penis:hover + .druppels {
-    -webkit-transition: all 1s ease-in-out;
-    -moz-transition: all 1s ease-in-out;
-    -o-transition: all 1s ease-in-out;
-    transition: all 1s ease-in-out;
+    -moz-animation-name: shake;
+    -moz-animation-duration: infinite;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+
+    -webkit-animation-name: shake;
+    -webkit-animation-duration: infinite;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
 }
 
 img.druppels {
@@ -129,6 +128,43 @@ img.druppels {
 }
 
 .bounceInUp {
-    -webkit-animation-name: bounceInUp;
-    animation-name: bounceInUp;
+    -webkit-animation: bounceInUp .5s;
+    -moz-animation: bounceInUp .5s;
+    -o-animation: bounceInUp .5s;
+    animation: bounceInUp .5s;
+}
+
+.topTobottom {
+    -webkit-animation: topTobottom infinite;
+    -moz-animation: topTobottom infinite;
+    -o-animation: topTobottom infinite;
+    animation: topTobottom infinite;
+}
+
+@keyframes topTobottom {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(2000px);
+        -ms-transform: translateY(2000px);
+        transform: translateY(2000px);
+    }
+    100% {
+        -webkit-transform: translateY(-500px);
+        -ms-transform: translateY(-500px);
+        transform: translateY(-500px);
+    }
+}
+
+@-webkit-keyframes topTobottom {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(2000px);
+        -ms-transform: translateY(2000px);
+        transform: translateY(2000px);
+    }
+    100% {
+        -webkit-transform: translateY(-500px);
+        -ms-transform: translateY(-500px);
+        transform: translateY(-500px);
+    }
 }
