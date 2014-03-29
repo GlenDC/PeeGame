@@ -69,6 +69,7 @@
 
         gyro.startTracking(function (o) {
             sendGyroData(o);
+            console.log("Started Tracking");
             b.html("<p> name = " + userName + "</p>" +
                     "<p> x = " + o.x + "</p>" +
                     "<p> y = " + o.y + "</p>" +
