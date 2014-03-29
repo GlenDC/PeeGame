@@ -17,7 +17,7 @@ Player.prototype.pee = function() {
   var maxBalls = 100;
 
   var ballBody = new CANNON.RigidBody(1, Resources.ballShape);
-  var ballMesh = new THREE.Mesh( Resources.ballGeometry, peeMaterial );
+  var ballMesh = new THREE.Mesh( Resources.ballGeometry, Resources.peeMaterial );
   Game.world.add(ballBody);
   Game.scene.add(ballMesh);
   ballMesh.castShadow = true;

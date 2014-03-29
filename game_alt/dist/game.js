@@ -3,6 +3,10 @@ $(function() {
   window.Resources = {};
   var player = new Player({});
 
+  Resources.ballShape = new CANNON.Sphere(0.03);
+  Resources.ballGeometry = new THREE.SphereGeometry(Resources.ballShape.radius);
+  Resources.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
+
   Game.scene = new THREE.Scene();
   Game.camera = null;
 
@@ -25,23 +29,15 @@ $(function() {
     var pointerlockchange = function ( event ) {
 
       if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
-
         controls.enabled = true;
-
         blocker.style.display = 'none';
-
       } else {
-
         controls.enabled = false;
-
         blocker.style.display = '-webkit-box';
         blocker.style.display = '-moz-box';
         blocker.style.display = 'box';
-
         instructions.style.display = '';
-
       }
-
     }
 
     var pointerlockerror = function ( event ) {
@@ -64,7 +60,6 @@ $(function() {
       element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
       if ( /Firefox/i.test( navigator.userAgent ) ) {
-
         var fullscreenchange = function ( event ) {
 
           if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
@@ -188,7 +183,6 @@ $(function() {
     geometry = new THREE.PlaneGeometry( 300, 300, 50, 50 );
     geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 
-    peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
     material = new THREE.MeshLambertMaterial( { color: 0xDDDDDD } );
     THREE.ColorUtils.adjustHSV( material.color, 0, 0, 0.9 );
 
@@ -228,7 +222,6 @@ $(function() {
       boxes.push(boxBody);
       boxMeshes.push(boxMesh);
     }
-
 
     // Add linked boxes
     var size = 0.5;
@@ -277,7 +270,6 @@ $(function() {
     requestAnimationFrame( animate );
     if ( controls.enabled ) {
       Game.world.step(dt);
-
       player.updateBalls();
 
       // Update box positions
@@ -293,31 +285,19 @@ $(function() {
     controls.update( Date.now() - time );
     renderer.render( Game.scene, Game.camera );
     time = Date.now();
-
   }
 
   // Particles
   var particles = new THREE.Geometry;
-
   for (var p = 0; p < 2000; p++) {
     var particle = new THREE.Vector3(Math.random() * 500 - 250, Math.random() * 500 - 250, Math.random() * 500 - 250);
     particles.vertices.push(particle);
   }
 
-  var particleMaterial = new THREE.ParticleBasicMaterial({ color: 0xeeeeee, size: 2 });
-
-  var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
+  var particleMaterial  = new THREE.ParticleBasicMaterial({ color: 0xeeeeee, size: 2 });
+  var particleSystem    = new THREE.ParticleSystem(particles, particleMaterial);
 
   Game.scene.add(particleSystem);
-
-  Resources.ballShape = new CANNON.Sphere(0.03);
-
-  /*var ballShape = THREE.Geometry;
-    var particleMaterial = new THREE.ParticleBasicMaterial({ color: 0xeeeeee, size: 2 });
-    var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);*/
-
-
-  Resources.ballGeometry = new THREE.SphereGeometry(Resources.ballShape.radius);
 });
 ;var Player = function(args) {
   this.name   = args.name;
@@ -338,7 +318,7 @@ Player.prototype.pee = function() {
   var maxBalls = 100;
 
   var ballBody = new CANNON.RigidBody(1, Resources.ballShape);
-  var ballMesh = new THREE.Mesh( Resources.ballGeometry, peeMaterial );
+  var ballMesh = new THREE.Mesh( Resources.ballGeometry, Resources.peeMaterial );
   Game.world.add(ballBody);
   Game.scene.add(ballMesh);
   ballMesh.castShadow = true;
