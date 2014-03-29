@@ -3,7 +3,7 @@ var express = require('express');
 
 // Import the 'path' module (packaged with Node.js)
 var path = require('path');
-
+var _ = require('underscore');
 var util = require('util');
 
 // Create a new instance of Express
@@ -51,29 +51,37 @@ var intToARGB = function (i) {
 
 //HANDLE POST FORM
 app.post('/connect', function (req, res) {
-    console.log("connect request from user incoming: \n" + JSON.stringify(req.body));
+//    console.log("connect request from user incoming: \n" + JSON.stringify(req.body));
     var name = req.body.uid, color, detected;
-    color = intToARGB(hashCode(name)).substring(0,6);
+    color = intToARGB(hashCode(name)).substring(0, 6);
 
     var player = {
         "player": {
             "uid": req.body.uid,
-            "color": "#" + color
+            "color": color
         }
     };
 
-    for (var i in players) {
-        val = players[i];
-        if (val == player) {
-            detected = true;
-        }
-    }
-    if (!detected) {
+    if (players.length == 0) {
         players.push(player);
+    } else {
+        for (var i in players) {
+
+            console.log(players[i].player.uid);
+
+            var val = players[i];
+            if (val.player.uid == player.player.uid) {
+                detected = true;
+            }
+        }
+        if (!detected) {
+            players.push(player);
+        }
     }
     req.method = 'get';
     res.redirect('server/device/connected.html?uid=' + name + '&color=' + color);
 });
+
 
 app.get('/device', function (req, res) {
     req.method = 'get';
@@ -83,37 +91,62 @@ app.get('/device', function (req, res) {
 
 var players = [];
 
-setInterval(function () {
-    util.print("\u001b[2J\u001b[0;0H");
-    console.log("Starting server on port " + port);
-    console.log("Dicks detectes");
-    console.dir(players);
 
-}, 500);
 
 //SOCKETS.IO STUFF
 
 // Create a Socket.IO server and attach it to the http server
 var io = require('socket.io').listen(server);
-
+var noplayersmentioned = false;
 // Reduce the logging output of Socket.IO
 io.set('log level', 1);
 io.sockets.on('connection', function (socket) {
     var self_socket = socket;
 
+
     var sendToMothership = function (data) {
         var player = {
             "player": {
                 "uid": data.uid,
-                "color": "#" + data.color,
+                "color": data.color,
                 "gyro": data.gyro
             }
         };
-        console.log("connection incoming from " + data.uid)
-        io.sockets.emit("mothership", {player: player});
+//        console.log("connection incoming from ",data);
+
+        if (players.length == 0) {
+            players.push(player);
+        } else {
+            for (var i in players) {
+
+                console.log("in sendtoMothership");
+                console.log(players[i].player.uid);
+
+                var val = players[i].player;
+                if (val.uid == player.player.uid) {
+                    detected = true;
+                    console.log(players[i]['player'].gyro);
+
+                    players[i]['player'].gyro = data.gyro;
+
+                }
+            }
+            if (!detected) {
+                players.push(player);
+            }
+        }
+        if (players.length > 0) {
+            io.sockets.emit("mothership", players);
+        }
     };
     socket.on('player_data', function (data) {
         sendToMothership(data);
+
+
+        if (players.length > 0) {
+            console.log("ins player_data");
+            console.dir(players[0].player.gyro);
+        }
     });
     self_socket.emit("mothership", {init: "server here"});
 });

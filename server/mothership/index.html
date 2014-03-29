@@ -12,6 +12,8 @@
 
 <script>
     $(function () {
+        var b = $('#example');
+
         var currentURl = function () {
             var url = window.location.href;
             var loc = window.location;
@@ -23,15 +25,29 @@
             return url;
         };
         var socket = io.connect(currentURl());
-        var b = $('#example');
+
         socket.on('mothership', function (o) {
             console.log(o);
-            b.html("<p> x = " + o.x + "</p>" +
-                    "<p> y = " + o.y + "</p>" +
-                    "<p> z = " + o.z + "</p>" +
-                    "<p> alpha = " + o.alpha + "</p>" +
-                    "<p> beta = " + o.beta + "</p>" +
-                    "<p> gamma = " + o.gamma + "</p>");
+
+            if (!o.init) {
+                b.empty();
+                for (var player in o) {
+                    console.log("player " + player);
+                    var currentplayer = o[player].player;
+                    b.append(
+                            "<p> name = " + currentplayer.uid + "</p>" +
+                                    "<p> x = " + currentplayer.gyro.x + "</p>" +
+                                    "<p> y = " + currentplayer.gyro.y + "</p>" +
+                                    "<p> z = " + currentplayer.gyro.z + "</p>" +
+                                    "<p> alpha = " + currentplayer.gyro.alpha + "</p>" +
+                                    "<p> beta = " + currentplayer.gyro.beta + "</p>" +
+                                    "<p> gamma = " + currentplayer.gyro.gamma + "</p>");
+                }
+
+            } else {
+                console.log(o);
+            }
+
         });
     });
 

@@ -1,12 +1,15 @@
 {
-    "name": "application-name",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-        "express": "~3.x",
-        "socket.io": "~0.9",
-        "http": "0.0.0",
-        "sockjs": "~0.3.8",
-        "node-static": "~0.7.3"
-    }
+  "name": "application-name",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "~3.x",
+    "socket.io": "~0.9",
+    "http": "0.0.0",
+    "sockjs": "~0.3.8",
+    "node-static": "~0.7.3"
+  },
+  "devDependencies": {
+    "underscore": "^1.6.0"
+  }
 }
