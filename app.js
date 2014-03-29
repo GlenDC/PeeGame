@@ -21,7 +21,7 @@ app.get('/', function (req, res) {
     res.send('Da app is running <br><br><br>&copy;Pee-game 2014')
 });
 
-var port = process.env.PORT || 3000;
+var port = 3000;
 
 // Create a Node.js based http server on port 8080
 var server = require('http').createServer(app).listen(port);
@@ -37,7 +37,9 @@ var io = require('socket.io').listen(server);
 // Reduce the logging output of Socket.IO
 io.set('log level', 1);
 io.sockets.on('connection', function (socket) {
-    socket.on('gyro_data', function (data) {
+    socket.on('player_data', function (data) {
         console.log(data);
     });
+//    socket.emit("mothership", {koray: "KORAY"});
+
 });

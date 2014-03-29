@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="../js/socket.io.min.js"></script>
+</head>
+<body>
+<h1>This is the mothership</h1>
+
+<span id="example"></span>
+
+<script>
+    $(function () {
+        var socket = io.connect('http://pnp.ngrok.com');
+        var b = $('#example');
+        socket.on('mothership', function (o) {
+            console.log(o);
+            b.html("<p> x = " + o.x + "</p>" +
+                    "<p> y = " + o.y + "</p>" +
+                    "<p> z = " + o.z + "</p>" +
+                    "<p> alpha = " + o.alpha + "</p>" +
+                    "<p> beta = " + o.beta + "</p>" +
+                    "<p> gamma = " + o.gamma + "</p>");
+        });
+    });
+</script>
+
+</body>
+</html>
