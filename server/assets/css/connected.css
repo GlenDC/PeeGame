@@ -1,18 +1,128 @@
-.outside {
-    max-width: 700px;
-    height: 100%;
-    width: 90%;
+.container {
+    width: 100%;
+
+}
+
+.container .wrapper{
+    width: 300px;
     margin: 0 auto;
-    position: relative;
+    padding: 10px;
 }
-.inside {
-    height: 100%;
+
+.center{
     text-align: center;
+    margin: 0 auto;
+    width: 170px;
 }
 
-.inside img.penis {
-    height: 100%;
+img.penis {
+    bottom: 0;
+    position: absolute;
+    display: block;
+    width: 170px;
+    cursor: pointer;
+    -webkit-animation: bounceInUp .5s ;
+    -moz-animation: bounceInUp .5s;
+    -o-animation: bounceInUp .5s;
+    animation: bounceInUp .5s;
 }
-.inside img.druppels {
 
+img.penis:hover {
+
+    -webkit-animation: shake .5s infinite;
+    -moz-animation: shake .5s infinite;
+    -o-animation: shake .5s infinite;
+    animation: shake .5s infinite;
+}
+
+.wrapper img.druppels {
+
+}
+
+.dick-name {
+    color: #fff;
+    font-family: 'PIPI';
+    text-align: center;
+    text-transform: uppercase;
+}
+
+@-webkit-keyframes shake {
+    0%, 100% {-webkit-transform: translateX(0);}
+    10%, 30%, 50%, 70%, 90% {-webkit-transform: translateX(-10px);}
+    20%, 40%, 60%, 80% {-webkit-transform: translateX(10px);}
+}
+
+@-moz-keyframes shake {
+    0%, 100% {-moz-transform: translateX(0);}
+    10%, 30%, 50%, 70%, 90% {-moz-transform: translateX(-10px);}
+    20%, 40%, 60%, 80% {-moz-transform: translateX(10px);}
+}
+
+@-o-keyframes shake {
+    0%, 100% {-o-transform: translateX(0);}
+    10%, 30%, 50%, 70%, 90% {-o-transform: translateX(-10px);}
+    20%, 40%, 60%, 80% {-o-transform: translateX(10px);}
+}
+
+@keyframes shake {
+    0%, 100% {transform: translateX(0);}
+    10%, 30%, 50%, 70%, 90% {transform: translateX(-10px);}
+    20%, 40%, 60%, 80% {transform: translateX(10px);}
+}
+
+@-webkit-keyframes bounceInUp {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(2000px);
+        transform: translateY(2000px);
+    }
+
+    60% {
+        opacity: 1;
+        -webkit-transform: translateY(-30px);
+        transform: translateY(-30px);
+    }
+
+    80% {
+        -webkit-transform: translateY(10px);
+        transform: translateY(10px);
+    }
+
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceInUp {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(2000px);
+        -ms-transform: translateY(2000px);
+        transform: translateY(2000px);
+    }
+
+    60% {
+        opacity: 1;
+        -webkit-transform: translateY(-30px);
+        -ms-transform: translateY(-30px);
+        transform: translateY(-30px);
+    }
+
+    80% {
+        -webkit-transform: translateY(10px);
+        -ms-transform: translateY(10px);
+        transform: translateY(10px);
+    }
+
+    100% {
+        -webkit-transform: translateY(0);
+        -ms-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
+.bounceInUp {
+    -webkit-animation-name: bounceInUp;
+    animation-name: bounceInUp;
 }
