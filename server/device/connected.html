@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1, user-scalable=no">
+    <title></title>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="../js/gyro.js"></script>
+    <script src="../js/socket.io.min.js"></script>
+</head>
+<body>
+<h1>
+    You are connected
+</h1>
+
+<span id="example"></span>
+
+<script>
+
+    $(function () {
+        var gyro = gyrojs();
+        var b = $('#example');
+
+        var currentURl = function () {
+            var url = window.location.href;
+            var loc = window.location;
+            if (loc.port != undefined) {
+                var url = loc.protocol + '//' + loc.hostname + ':' + loc.port;
+            } else {
+                var url = loc.protocol + '//' + loc.hostname;
+            }
+            return url;
+        };
+        var queryParam = function (name) {
+            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + name + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(window.location.href);
+            if (results == null) return "";
+            else return results[1];
+        };
+
+
+        var userColor = queryParam('color');
+        var userName = queryParam('uid');
+
+
+        var socket = io.connect(currentURl());
+
+
+        //SETUP Player object
+        var player = {
+            "uid": userName,
+            "color": userColor,
+            "gyro": {}
+        };
+
+
+        var sendGyroData = function (o) {
+            player.gyro = o;
+            socket.emit('player_data', player);
+        };
+
+
+        gyro.startTracking(function (o) {
+            sendGyroData(o);
+            b.html("<p> name = " + userName + "</p>" +
+                    "<p> x = " + o.x + "</p>" +
+                    "<p> y = " + o.y + "</p>" +
+                    "<p> z = " + o.z + "</p>" +
+                    "<p> alpha = " + o.alpha + "</p>" +
+                    "<p> beta = " + o.beta + "</p>" +
+                    "<p> gamma = " + o.gamma + "</p>");
+        });
+    });
+</script>
+</body>
+</html>

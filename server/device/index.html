@@ -2,21 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1, user-scalable=no">
+
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="../js/gyro.js"></script>
-    <script src="../js/socket.io.min.js"></script>
 </head>
 <body>
 
-
-<p>gyro.getFeatures: <span id="features"></span></p>
-<span id="example"></span>
+<form action="/connect" method="post">
+    <input type="text" id="uid" name="uid" autofocus>
+    <input type="hidden" id="color" name="color" value="">
+    <br>
+    <br>
+    <br>
+    <button id="connect" type="submit">UNZIP</button>
+</form>
 
 
 <script>
 
     $(function () {
-        var gyro = gyrojs();
         var b = $('#example');
 
         var currentURl = function () {
@@ -31,7 +35,7 @@
         };
         var getRandomColor = function () {
             var letters = '0123456789ABCDEF'.split('');
-            var color = '#';
+            var color = "";
             for (var i = 0; i < 6; i++) {
                 color += letters[Math.round(Math.random() * 15)];
             }
@@ -40,8 +44,8 @@
 
 
         var userColor = getRandomColor();
-        var socket = io.connect(currentURl());
 
+        $("#color").val(userColor);
 
         //SETUP Player object
         var player = {
@@ -49,22 +53,6 @@
             "color": userColor,
             "gyro": {}
         };
-
-
-        var sendGyroData = function (o) {
-            player.gyro = o;
-            socket.emit('player_data', player);
-        };
-
-        gyro.startTracking(function (o) {
-            sendGyroData(o);
-            b.html("<p> x = " + o.x + "</p>" +
-                    "<p> y = " + o.y + "</p>" +
-                    "<p> z = " + o.z + "</p>" +
-                    "<p> alpha = " + o.alpha + "</p>" +
-                    "<p> beta = " + o.beta + "</p>" +
-                    "<p> gamma = " + o.gamma + "</p>");
-        });
     });
 </script>
 </body>

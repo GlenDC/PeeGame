@@ -7,6 +7,8 @@ var path = require('path');
 // Create a new instance of Express
 var app = express();
 // Create a simple Express application
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded()); // to support URL-encoded bodies
 
 app.configure(function () {
     // Turn down the logging activity
@@ -29,6 +31,14 @@ app.set('title', 'Pee Game');
 console.log("Starting server on port " + port);
 
 
+//HANDLE POST FORM
+app.post('/connect', function (req, res) {
+    console.log("connect request from user incoming: \n" + JSON.stringify(req.body));
+    var name = req.body.uid, color = req.body.color;
+    req.method = 'get';
+    res.redirect('/device/connected.html?uid=' + name + '&color=' + color);
+});
+
 //SOCKETS.IO STUFF
 
 // Create a Socket.IO server and attach it to the http server
@@ -37,9 +47,16 @@ var io = require('socket.io').listen(server);
 // Reduce the logging output of Socket.IO
 io.set('log level', 1);
 io.sockets.on('connection', function (socket) {
+    var self_socket = socket;
+
+    var sendToMothership = function (data) {
+        io.sockets.emit("mothership", {player: data});
+    };
     socket.on('player_data', function (data) {
         console.log(data);
+        sendToMothership(data);
     });
-//    socket.emit("mothership", {koray: "KORAY"});
+    self_socket.emit("mothership", {init: "server here"});
+
 
 });
