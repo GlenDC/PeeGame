@@ -297,15 +297,17 @@ $(function() {
         ballMesh.receiveShadow = true;
         balls.push(ballBody);
         ballMeshes.push(ballMesh);
+
         if (balls.length >= maxBalls) {
           var oldestBall = balls.shift();
           var oldestBallMesh = ballMeshes.shift();
-          scene.remove(oldestBall);
+          world.remove(oldestBall);
           scene.remove(oldestBallMesh);
         }
+
         getShootDir(shootDirection);
         ballBody.velocity.set(shootDirection.x * shootVelo,
-            shootDirection.y * shootVelo + 5,
+            shootDirection.y * shootVelo + 10,
             shootDirection.z * shootVelo);
 
         // Move the ball outside the player sphere
@@ -347,7 +349,7 @@ $(function() {
 
   var ballGeometry = new THREE.SphereGeometry(ballShape.radius);
   var shootDirection = new THREE.Vector3();
-  var shootVelo = 10;
+  var shootVelo = 5;
   var projector = new THREE.Projector();
   function getShootDir(targetVec){
     var vector = targetVec;
