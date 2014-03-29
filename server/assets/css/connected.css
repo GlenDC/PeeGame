@@ -23,20 +23,7 @@ img.penis {
 }
 
 img.penis:hover {
-    animation-name: shake;
-    animation-duration:  .5s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
 
-    -moz-animation-name: shake;
-    -moz-animation-duration:  .5s;
-    -moz-animation-iteration-count: infinite;
-    -moz-animation-timing-function: linear;
-
-    -webkit-animation-name: shake;
-    -webkit-animation-duration: .5s;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
 }
 
 .druppels {
@@ -184,4 +171,21 @@ img.penis:hover {
         opacity: 1;
         background-position: 0 -1000px;
     }
+}
+
+.shake {
+    animation-name: shake;
+    animation-duration:  .5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+
+    -moz-animation-name: shake;
+    -moz-animation-duration:  .5s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+
+    -webkit-animation-name: shake;
+    -webkit-animation-duration: .5s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
 }

@@ -60,11 +60,13 @@
         document.body.style.webkitTouchCallout='none';
 
         $('.penis').on({
-           mouseenter: function (){
-                $('.druppels').addClass('topTobottom');
+           touchstart: function (){
+               $('.druppels').addClass('topTobottom');
+               $('.penis').addClass('shake');
            },
-           mouseleave : function(){
+            touchend : function(){
                $('.penis').removeClass('bounceInUp');
+               $('.penis').removeClass('shake');
                $('.druppels').removeClass('topTobottom');
            }
         });
