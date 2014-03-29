@@ -1,6 +1,5 @@
 .container {
     width: 100%;
-
 }
 
 .container .wrapper{
@@ -25,17 +24,17 @@ img.penis {
 
 img.penis:hover {
     animation-name: shake;
-    animation-duration: infinite;
+    animation-duration:  .5s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 
     -moz-animation-name: shake;
-    -moz-animation-duration: infinite;
+    -moz-animation-duration:  .5s;
     -moz-animation-iteration-count: infinite;
     -moz-animation-timing-function: linear;
 
     -webkit-animation-name: shake;
-    -webkit-animation-duration: infinite;
+    -webkit-animation-duration: .5s;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-timing-function: linear;
 }
@@ -135,10 +134,20 @@ img.druppels {
 }
 
 .topTobottom {
-    -webkit-animation: topTobottom infinite;
-    -moz-animation: topTobottom infinite;
-    -o-animation: topTobottom infinite;
-    animation: topTobottom infinite;
+    animation-name: topTobottom;
+    animation-duration:  .5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+
+    -moz-animation-name: topTobottom;
+    -moz-animation-duration:  2s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+
+    -webkit-animation-name: topTobottom;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
 }
 
 @keyframes topTobottom {
@@ -157,7 +166,6 @@ img.druppels {
 
 @-webkit-keyframes topTobottom {
     0% {
-        opacity: 0;
         -webkit-transform: translateY(2000px);
         -ms-transform: translateY(2000px);
         transform: translateY(2000px);

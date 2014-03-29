@@ -18,8 +18,8 @@
     </div>
 </div>
 <div class="center">
-    <img class="bounceInUp penis" src="../assets/img/penis.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'" class="penis"/>
-    <img class="topTobottom" src="../assets/img/druppels.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'" class="druppels"/>
+    <img class="bounceInUp penis" src="../assets/img/penis.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'"/>
+    <img class="druppels" src="../assets/img/druppels.svg" onerror="this.onerror=null; class="druppels"/>
 </div>
 
 <script>
@@ -55,6 +55,17 @@
         var socket = io.connect(currentURl());
         console.log(userColor);
         $('body').css('background-color', '#' + userColor);
+        $('.dick-name').html(userName);
+
+        $('.penis').on({
+           mouseenter: function (){
+                $('.druppels').addClass('topTobottom');
+           },
+           mouseleave : function(){
+               $('.penis').removeClass('bounceInUp');
+               $('.druppels').removeClass('topTobottom');
+           }
+        });
 
         //SETUP Player object
         var player = {
