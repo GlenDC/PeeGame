@@ -12,7 +12,17 @@
 
 <script>
     $(function () {
-        var socket = io.connect('http://pnp.ngrok.com');
+        var currentURl = function () {
+            var url = window.location.href;
+            var loc = window.location;
+            if (loc.port != undefined) {
+                var url = loc.protocol + '//' + loc.hostname + ':' + loc.port;
+            } else {
+                var url = loc.protocol + '//' + loc.hostname;
+            }
+            return url;
+        };
+        var socket = io.connect(currentURl());
         var b = $('#example');
         socket.on('mothership', function (o) {
             console.log(o);
@@ -24,6 +34,7 @@
                     "<p> gamma = " + o.gamma + "</p>");
         });
     });
+
 </script>
 
 </body>
