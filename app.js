@@ -25,4 +25,5 @@ var port = process.env.PORT || 3000;
 
 // Create a Node.js based http server on port 8080
 var server = require('http').createServer(app).listen(port);
+app.set('title', 'Pee Game');
 console.log("Starting server on port " + port);
