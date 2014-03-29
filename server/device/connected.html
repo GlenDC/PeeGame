@@ -19,8 +19,8 @@
     </div>
 </div>
 <div class="center">
-    <img src="../assets/img/druppels.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'" class="druppels"/>
     <img class="penis" src="../assets/img/penis.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'" class="penis"/>
+    <img src="../assets/img/druppels.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'" class="druppels"/>
 </div>
 
 <script>
@@ -54,8 +54,8 @@
 
 
         var socket = io.connect(currentURl());
-
-//      $
+        console.log(userColor);
+        $('body').css('background-color', '#' + userColor);
 
         //SETUP Player object
         var player = {

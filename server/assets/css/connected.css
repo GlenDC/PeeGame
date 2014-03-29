@@ -28,14 +28,20 @@ img.penis {
 }
 
 img.penis:hover {
-
     -webkit-animation: shake .5s infinite;
     -moz-animation: shake .5s infinite;
     -o-animation: shake .5s infinite;
     animation: shake .5s infinite;
 }
 
-.wrapper img.druppels {
+img.penis:hover + .druppels {
+    -webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+}
+
+img.druppels {
 
 }
 
