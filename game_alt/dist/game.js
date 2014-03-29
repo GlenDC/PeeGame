@@ -3,6 +3,7 @@ $(function() {
   var scene = new THREE.Scene();
 
   var sphereShape, sphereBody, world, physicsMaterial, walls=[], balls=[], ballMeshes=[], boxes=[], boxMeshes=[];
+  var maxBalls = 100;
 
   var camera, scene, renderer;
   var geometry, material, mesh;
@@ -286,7 +287,7 @@ $(function() {
       // Shoot ballz
       if(controls.enabled==true){
         var x = sphereBody.position.x;
-        var y = sphereBody.position.y;
+        var y = sphereBody.position.y - 0.75;
         var z = sphereBody.position.z;
         var ballBody = new CANNON.RigidBody(1,ballShape);
         var ballMesh = new THREE.Mesh( ballGeometry, peeMaterial );
@@ -296,9 +297,17 @@ $(function() {
         ballMesh.receiveShadow = true;
         balls.push(ballBody);
         ballMeshes.push(ballMesh);
+
+        if (balls.length >= maxBalls) {
+          var oldestBall = balls.shift();
+          var oldestBallMesh = ballMeshes.shift();
+          world.remove(oldestBall);
+          scene.remove(oldestBallMesh);
+        }
+
         getShootDir(shootDirection);
-        ballBody.velocity.set(  shootDirection.x * shootVelo,
-            shootDirection.y * shootVelo,
+        ballBody.velocity.set(shootDirection.x * shootVelo,
+            shootDirection.y * shootVelo + 10,
             shootDirection.z * shootVelo);
 
         // Move the ball outside the player sphere
@@ -340,7 +349,7 @@ $(function() {
 
   var ballGeometry = new THREE.SphereGeometry(ballShape.radius);
   var shootDirection = new THREE.Vector3();
-  var shootVelo = 20;
+  var shootVelo = 5;
   var projector = new THREE.Projector();
   function getShootDir(targetVec){
     var vector = targetVec;
