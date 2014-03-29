@@ -31,10 +31,27 @@ app.set('title', 'Pee Game');
 console.log("Starting server on port " + port);
 
 
+var hashCode = function (str) { // java String#hashCode
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+}
+
+var intToARGB = function (i) {
+    return ((i >> 24) & 0xFF).toString(16) +
+        ((i >> 16) & 0xFF).toString(16) +
+        ((i >> 8) & 0xFF).toString(16) +
+        (i & 0xFF).toString(16);
+}
+
 //HANDLE POST FORM
 app.post('/connect', function (req, res) {
     console.log("connect request from user incoming: \n" + JSON.stringify(req.body));
-    var name = req.body.uid, color = req.body.color;
+    var name = req.body.uid, color;
+    color = intToARGB(hashCode(name));
+
     req.method = 'get';
     res.redirect('/device/connected.html?uid=' + name + '&color=' + color);
 });
