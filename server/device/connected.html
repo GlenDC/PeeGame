@@ -9,7 +9,6 @@
     <script src="../js/socket.io.min.js"></script>
     <link rel="stylesheet" href="../assets/css/app.css"/>
     <link rel="stylesheet" href="../assets/css/connected.css"/>
-
 </head>
 <body>
 <!--<div class="container">-->
@@ -23,13 +22,20 @@
     <input type="hidden" value="" id="uid" name="uid"/>
     <input class="logout" type="submit" value="×"/>
 </form>
-<audio preload="auto" id='twerkNoise'>
+<audio preload="auto" id='plas1'>
+    <source src="../assets/audio/plas1.mp3"></source>
+</audio>
+<audio preload="auto" id="plas2">
     <source src="../assets/audio/plas2.mp3"></source>
+</audio>
+<audio preload="auto" id="plas3">
+    <source src="../assets/audio/plas3.mp3"></source>
+</audio>
+<audio preload="auto" id="zipper">
     <source src="../assets/img/zipper.mp3"></source>
 </audio>
 <div class="center">
     <h1 class="dick-name">Johnson</h1>
-
     <div class="penis"></div>
     <!--<div class="nigga-penis penis"></div>-->
     <div class="druppels toptobottom"></div>
@@ -39,6 +45,12 @@
 <script>
 
     $(function () {
+        var RAND = Math.floor(Math.random() * 3) + 1;
+        var plas = $("#plas"+ RAND)[0];
+        var zipper = $("#zipper")[0];
+
+        zipper.play();
+
         var gyro = gyrojs();
         var b = $('#example');
 
@@ -52,6 +64,7 @@
             }
             return url;
         };
+
         var queryParam = function (name) {
             name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
             var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -61,23 +74,18 @@
             else return results[1];
         };
 
-
         var userColor = queryParam('color');
         var userName = queryParam('uid');
-        var userSound = queryParam('sound');
-
 
         var socket = io.connect(currentURl());
         $('body').css('background-color', '#' + userColor);
         $('#logout_form #uid').val(decodeURIComponent(userName));
         $('.dick-name').html(decodeURIComponent(userName));
-
         //$('.penis').disableSelection();
 
         document.body.style.webkitTouchCallout = 'none';
 
-
-        var twerkNoise = $("#twerkNoise")[0];
+        var clearToPiss = false;
 
         $('.penis').on({
             touchstart: function (e) {
@@ -94,36 +102,17 @@
                             "<p> beta = " + o.beta + "</p>" +
                             "<p> gamma = " + o.gamma + "</p>");
                 });
-
-                twerkNoise.pause();
-
-                twerkNoise.addEventListener('ended', function () {
-                    this.currentTime = 0;
-                    this.play();
-                }, false);
-
-                twerkNoise.play();
+                playSounds(plas);
             },
             touchend: function () {
-                gyro.stopTracking();
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
-                twerkNoise.pause();
+                endSounds(plas);
             },
             mouseenter: function () {
                 $('.druppels').addClass('topTobottom');
                 $('.penis').addClass('shake');
-
-                twerkNoise.pause();
-
-                twerkNoise.addEventListener('ended', function () {
-                    this.currentTime = 0;
-                    this.play();
-                }, false);
-
-                twerkNoise.play();
-
                 gyro.startTracking(function (o) {
                     sendGyroData(o);
                     b.html("<p> name = " + userName + "</p>" +
@@ -134,19 +123,18 @@
                             "<p> beta = " + o.beta + "</p>" +
                             "<p> gamma = " + o.gamma + "</p>");
                 });
+                playSounds(plas);
             },
             mouseleave: function () {
-                gyro.stopTracking();
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
-                twerkNoise.pause();
+                gyro.stopTracking();
+                endSounds(plas);
             }
         });
 
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
+
 
         //SETUP Player object
         var player = {
@@ -164,6 +152,24 @@
 
         console.log("Starting Tracking");
     });
+
+    function playSounds(sound){
+        console.log(sound);
+        sound.pause();
+
+        sound.addEventListener('ended', function() {
+            this.currentTime = 0;
+            this.play();
+        }, false);
+
+        sound.play();
+    }
+
+    function endSounds(sound){
+        sound.pause();
+        sound.currentTime = 0;
+    }
+
 </script>
 </body>
 </html>

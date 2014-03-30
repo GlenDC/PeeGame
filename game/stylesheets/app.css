@@ -48,3 +48,13 @@ body {
   cursor: pointer;
 
 }
+
+header{
+    background-color: #a9d2c9;
+    text-align: center;
+}
+
+header img {
+    width: 80px;
+    padding: 5px;
+}

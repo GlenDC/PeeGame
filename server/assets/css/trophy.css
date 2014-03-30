@@ -10,5 +10,11 @@
 
 h1 {
     color: #fff;
-    font: 'PIPI';
+    font-family: 'PIPI';
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.trophy img{
+    width: 100%;
 }
