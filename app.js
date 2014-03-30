@@ -88,6 +88,28 @@ app.get('/device', function (req, res) {
     res.redirect('server/device/index.html');
 });
 
+app.get('/logout', function (req, res) {
+    var name = req.body.uid;
+
+    if (players.length != 0){
+        for (var i in players) {
+
+            console.log(players[i].player.uid);
+
+            var val = players[i];
+            if (val.player.uid == name) {
+                players.remove(val);
+            }
+        }
+        if (!detected) {
+            players.push(player);
+        }
+    }
+
+    req.method = 'get';
+    res.redirect('server/device/index.html');
+});
+
 /** PLAYERS CONTAINS ALL ACTIVE PLAYERS*/
 var players = [];
 

@@ -15,7 +15,7 @@
 }
 
 img.penis {
-    bottom: 0;
+    bottom: -5px;
     position: absolute;
     display: block;
     width: 170px;
@@ -188,4 +188,13 @@ img.penis:hover {
     -webkit-animation-duration: .5s;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-timing-function: linear;
+}
+
+.logout {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 30px;
+    color: #fff;
 }

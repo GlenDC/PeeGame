@@ -16,6 +16,13 @@
     <!--<div class="wrapper">-->
     <!--</div>-->
 <!--</div>-->
+<div>
+
+</div>
+<form method="get" action="/logout" id="logout_form">
+    <input type="hidden" value="" id="uid" name="uid"/>
+    <input class="logout" type="submit" value="×"/>
+</form>
 <div class="center">
     <h1 class="dick-name">Johnson</h1>
     <img class="bounceInUp penis" src="../assets/img/penis.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'"/>
@@ -55,6 +62,7 @@
 
         var socket = io.connect(currentURl());
         $('body').css('background-color', '#' + userColor);
+        $('#logout_form #uid').val(userName);
         $('.dick-name').html(userName);
 
         document.body.style.webkitTouchCallout='none';
@@ -68,7 +76,16 @@
                $('.penis').removeClass('bounceInUp');
                $('.penis').removeClass('shake');
                $('.druppels').removeClass('topTobottom');
-           }
+           },
+            mouseenter: function (){
+                $('.druppels').addClass('topTobottom');
+                $('.penis').addClass('shake');
+            },
+            mouseleave : function(){
+                $('.penis').removeClass('bounceInUp');
+                $('.penis').removeClass('shake');
+                $('.druppels').removeClass('topTobottom');
+            }
         });
 
         //SETUP Player object

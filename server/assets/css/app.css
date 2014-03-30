@@ -30,3 +30,22 @@ body {
 .container .wrapper{
     padding: 10px;
 }
+
+button {
+    font-family: 'PIPI';
+    -webkit-appearance: none;
+    border-radius: 3px;
+    padding: 5px;
+    border: none;
+    background-color: #ffc000;
+    color: #fff;
+    width: 100%;
+    outline: none;
+    font-size: 24px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color:#f2b704;
+}
