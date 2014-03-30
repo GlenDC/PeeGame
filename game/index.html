@@ -44,13 +44,16 @@
 
         socket.on('mothership', function (o) {
             if (!o.init) {
+                console.log(o);
                 $avatars.empty();
                 if (o.message != "noplayers") {
+                    var players = [];
                     for (var player in o) {
 //                        console.log("player " + player);
                         var currentplayer = o[player].player;
-                        $avatars.append('<li><div class="circle" style="background-color: #' + currentplayer.color + '"><img src="img/penis.svg" alt=""/></div><h2>' + currentplayer.uid + '</h2></li>');
+                        players.push('<li><div class="circle" style="background-color: #' + currentplayer.color + '"><img src="img/penis.svg" alt=""/></div><h2>' + currentplayer.uid + '</h2></li>');
                     }
+                    $avatars.html(players);
                 } else {
                     $avatars.html("<h2>No players</h2>");
                 }
