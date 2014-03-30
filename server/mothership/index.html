@@ -8,7 +8,9 @@
 <body>
 <h1>This is the mothership</h1>
 
-<span id="example"></span>
+<span id="example">
+    <h2>No players</h2>
+</span>
 
 <script>
     $(function () {
@@ -31,19 +33,22 @@
 
             if (!o.init) {
                 b.empty();
-                for (var player in o) {
-                    console.log("player " + player);
-                    var currentplayer = o[player].player;
-                    b.append(
-                            "<p> name = " + currentplayer.uid + "</p>" +
-                                    "<p> x = " + currentplayer.gyro.x + "</p>" +
-                                    "<p> y = " + currentplayer.gyro.y + "</p>" +
-                                    "<p> z = " + currentplayer.gyro.z + "</p>" +
-                                    "<p> alpha = " + currentplayer.gyro.alpha + "</p>" +
-                                    "<p> beta = " + currentplayer.gyro.beta + "</p>" +
-                                    "<p> gamma = " + currentplayer.gyro.gamma + "</p>");
+                if (o.message != "noplayers") {
+                    for (var player in o) {
+                        console.log("player " + player);
+                        var currentplayer = o[player].player;
+                        b.append(
+                                "<p> name = " + currentplayer.uid + "</p>" +
+                                        "<p> x = " + currentplayer.gyro.x + "</p>" +
+                                        "<p> y = " + currentplayer.gyro.y + "</p>" +
+                                        "<p> z = " + currentplayer.gyro.z + "</p>" +
+                                        "<p> alpha = " + currentplayer.gyro.alpha + "</p>" +
+                                        "<p> beta = " + currentplayer.gyro.beta + "</p>" +
+                                        "<p> gamma = " + currentplayer.gyro.gamma + "</p>");
+                    }
+                } else {
+                    b.append("<h2>No players</h2>");
                 }
-
             } else {
                 console.log(o);
             }

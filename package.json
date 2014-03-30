@@ -10,6 +10,7 @@
     "node-static": "~0.7.3"
   },
   "devDependencies": {
-    "underscore": "^1.6.0"
+    "underscore": "^1.6.0",
+    "html": "0.0.7"
   }
 }

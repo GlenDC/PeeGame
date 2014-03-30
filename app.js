@@ -1,10 +1,11 @@
 // Import the Express module
-var express = require('express');
+var express = require('express'),
+    path = require('path'),
+    util = require('util');
 
-// Import the 'path' module (packaged with Node.js)
-var path = require('path');
-var _ = require('underscore');
-var util = require('util');
+/** PLAYERS CONTAINS ALL ACTIVE PLAYERS*/
+var players = [];
+
 
 // Create a new instance of Express
 var app = express();
@@ -58,7 +59,15 @@ app.post('/connect', function (req, res) {
     var player = {
         "player": {
             "uid": req.body.uid,
-            "color": color
+            "color": color,
+            "gyro": {
+                x : "no value :(",
+                y : "no value :(",
+                z : "no value :(",
+                alpha : "no value :(",
+                beta : "no value :(",
+                gamma : "no value :("
+            }
         }
     };
 
@@ -66,9 +75,7 @@ app.post('/connect', function (req, res) {
         players.push(player);
     } else {
         for (var i in players) {
-
             console.log(players[i].player.uid);
-
             var val = players[i];
             if (val.player.uid == player.player.uid) {
                 detected = true;
@@ -88,33 +95,54 @@ app.get('/device', function (req, res) {
     res.redirect('server/device/index.html');
 });
 
-app.get('/logout', function (req, res) {
+var resetPlayerList = function () {
+    players.pop();
+    players = [];
+};
+app.post('/logout', function (req, res) {
     var name = req.body.uid;
+    console.log("Name found => " + req.body.uid);
 
-    if (players.length != 0){
+    if (players.length > 0 && players.length != 1) {
+
+        var newplayers = [];
         for (var i in players) {
 
             console.log(players[i].player.uid);
 
             var val = players[i];
-            if (val.player.uid == name) {
-                players.remove(val);
+
+            if (val.player.uid != name) {
+                newplayers.push(val.player);
             }
         }
-        if (!detected) {
-            players.push(player);
-        }
+        players = newplayers;
+
+    } else {
+        console.log("found only 1 player, empty playerslist");
+        resetPlayerList();
+        console.log(players);
     }
 
     req.method = 'get';
     res.redirect('server/device/index.html');
 });
 
-/** PLAYERS CONTAINS ALL ACTIVE PLAYERS*/
-var players = [];
 
+setInterval(function () {
+    console.log(players);
+    sendToMothership();
+}, 700);
 
 //SOCKETS.IO STUFF
+var sendToMothership = function () {
+
+    if (players.length > 0) {
+        io.sockets.emit("mothership", players);
+    } else {
+        io.sockets.emit("mothership", {message : "noplayers"})
+    }
+};
 
 // Create a Socket.IO server and attach it to the http server
 var io = require('socket.io').listen(server);
@@ -125,7 +153,8 @@ io.sockets.on('connection', function (socket) {
     var self_socket = socket;
 
 
-    var sendToMothership = function (data) {
+
+    socket.on('player_data', function (data) {
         var player = {
             "player": {
                 "uid": data.uid,
@@ -138,36 +167,19 @@ io.sockets.on('connection', function (socket) {
         if (players.length == 0) {
             players.push(player);
         } else {
-            console.log("players in the room ");
             for (var i in players) {
-
-                console.log("uid = " + players[i].player.uid);
-
                 var val = players[i].player;
-                if (val.uid == player.player.uid) {
+                if (val != undefined && val.uid == player.player.uid) {
                     detected = true;
-//                    console.log(players[i]['player'].gyro);
-
                     players[i]['player'].gyro = data.gyro;
-
                 }
             }
             if (!detected) {
                 players.push(player);
             }
         }
-        if (players.length > 0) {
-            io.sockets.emit("mothership", players);
-        }
-    };
-    socket.on('player_data', function (data) {
-        sendToMothership(data);
+        sendToMothership();
 
-
-        if (players.length > 0) {
-//            console.log("ins player_data");
-//            console.dir(players[0].player.gyro);
-        }
     });
     self_socket.emit("mothership", {init: "server here"});
 });
