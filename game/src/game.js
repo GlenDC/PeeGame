@@ -324,11 +324,11 @@ $(function() {
       tmpGyroVector.subSelf(Game.oldGyroRotation);
       Game.targetplayerRotation.addSelf(tmpGyroVector);
 
-      vector3 tempTargetCopy = new THREE.Vector3();
+      tempTargetCopy = new THREE.Vector3();
       tempTargetCopy.copy(Game.targetplayerRotation);
 
       tempTargetCopy.subSelf(Game.playerRotation);
-      tempTargetCopy.MultiplyScalar(0.5);
+      tempTargetCopy.multiplyScalar(0.2);
 
       Game.playerRotation.addSelf(tempTargetCopy);
 

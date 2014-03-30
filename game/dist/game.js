@@ -15,6 +15,7 @@ $(function() {
   window.Game = {};
   window.Game.socket = io.connect(currentURl());
   Game.playerRotation   = new THREE.Vector3(0, 0, 0);
+  Game.targetplayerRotation   = new THREE.Vector3(0, 0, 0);
   Game.oldGyroRotation  = new THREE.Vector3(-999, 0, 0);
   window.Game.playerData = {};
   window.Resources = {};
@@ -321,7 +322,15 @@ $(function() {
       }
 
       tmpGyroVector.subSelf(Game.oldGyroRotation);
-      Game.playerRotation.addSelf(tmpGyroVector);
+      Game.targetplayerRotation.addSelf(tmpGyroVector);
+
+      tempTargetCopy = new THREE.Vector3();
+      tempTargetCopy.copy(Game.targetplayerRotation);
+
+      tempTargetCopy.subSelf(Game.playerRotation);
+      tempTargetCopy.multiplyScalar(0.2);
+
+      Game.playerRotation.addSelf(tempTargetCopy);
 
       player.setShootDirection(Game.playerRotation);
 
