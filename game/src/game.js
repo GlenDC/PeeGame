@@ -274,10 +274,10 @@ $(function() {
     }
 
     // Add cans
-    var halfExtents = new CANNON.Vec3(0.25,0.5,0.25);
+    var halfExtents = new CANNON.Vec3(0.38,0.25,0.35);
     var boxShape = new CANNON.Box(halfExtents);
-    //var boxShape = new CANNON.Cylinder(0.25,0.25,2*0.25,10);
-    var boxGeometry = new THREE.CubeGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
+    // var boxShape = new CANNON.Cylinder(0.25, 0.50, 0.25, 10);
+    var boxGeometry = new THREE.CylinderGeometry(0.25, 0.25, 0.50, 10);
     //var boxGeometry = new CANNON.RigidBody(mass,boxShape);
     var maesImage = new THREE.MeshLambertMaterial({
         map: THREE.ImageUtils.loadTexture('../res/images/maes_texture.jpeg')
@@ -301,7 +301,7 @@ $(function() {
       boxMeshes.push(boxMesh);
     }
 
-    var rows = 3;
+    var rows = 4;
 
     var minX = 3;
     var maxX = minX + 6;
