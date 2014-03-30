@@ -313,17 +313,20 @@ $(function() {
       var gyro = Game.playerData[0].player.gyro;
       var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
 
+      var tmpGyroVector = new THREE.Vector3();
+      tmpGyroVector.copy(gyroVector);
+
       if (Game.oldGyroRotation.x == -999) {
         Game.oldGyroRotation = gyroVector;
       }
 
-      Game.playerRotation += gyroVector - game.oldGyroRotation;
-
-      
+      tmpGyroVector.subSelf(Game.oldGyroRotation);
+      Game.playerRotation.addSelf(tmpGyroVector);
 
       player.setShootDirection(Game.playerRotation);
 
-      game.oldGyroRotation = gyroVector;
+      Game.oldGyroRotation = gyroVector;
+      $('.value').text(Game.playerRotation.y || 'NOTHING');
     }
 
     requestAnimationFrame( animate );

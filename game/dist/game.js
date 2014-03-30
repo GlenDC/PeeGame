@@ -299,10 +299,11 @@ $(function() {
     v3.x /=5;
 
     v3.y = alpha * Math.PI / 180;
-      // y = Math.max(-Math.PI, Math.min(Math.PI, y));
-      // y /= 5;
+    // y = Math.max(-Math.PI, Math.min(Math.PI, y));
+    // y /= 5;
 
     v3.z = 0;
+
     return v3;
   };
   var dt = 1/60;
@@ -312,25 +313,22 @@ $(function() {
       var gyro = Game.playerData[0].player.gyro;
       var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
 
+      var tmpGyroVector = new THREE.Vector3();
+      tmpGyroVector.copy(gyroVector);
+
       if (Game.oldGyroRotation.x == -999) {
         Game.oldGyroRotation = gyroVector;
       }
 
-      var x = gyro.beta * Math.PI / 180;
-      x = Math.max(-Math.PI/2, Math.min(Math.PI/2, x));
-      x /= 5;
-      x = 0;
+      tmpGyroVector.subSelf(Game.oldGyroRotation);
+      Game.playerRotation.addSelf(tmpGyroVector);
 
-      var y = gyro.alpha * Math.PI / 180;
-      // y = Math.max(-Math.PI, Math.min(Math.PI, y));
-      // y /= 5;
+      player.setShootDirection(Game.playerRotation);
 
-      var z = 0; // gyro.gamma * Math.PI / 180;
-
-      $('.value').text(y);
-      var dir = new THREE.Vector3(x, y, z);
-      player.setShootDirection(dir);
+      Game.oldGyroRotation = gyroVector;
+      $('.value').text(Game.playerRotation.y || 'NOTHING');
     }
+
     requestAnimationFrame( animate );
     if ( controls.enabled ) {
       Game.world.step(dt);
