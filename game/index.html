@@ -1,48 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pee Game</title>
-  <link rel="stylesheet" type="text/css" href="stylesheets/app.css">
-  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <script src="../server/js/socket.io.min.js"></script>
+    <title>Pee Game</title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/app.css">
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="../server/js/socket.io.min.js"></script>
 </head>
 <body>
 
-  <script src="vendor/Three_r51.js"></script>
-  <script src="vendor/OBJLoader.js"></script>
-  <script src="vendor/cannon.js"></script>
-  <script src="vendor/lodash.js"></script>
-  <script src="http://schteppe.github.io/cannon.js/examples/js/PointerLockControls.js"></script>
-  <!--<p class="value"></p>-->
-  <header>
-      <a href="localhost:3000/game"><img src="img/logo.svg" alt=""/></a>
-  </header>
-  <ul class="avatars">
-    <li>
-        <div class="circle">
-            <img src="img/penis.svg" alt=""/>
-        </div>
-        <h2>username</h2>
-    </li>
-    <li>
-        <div class="circle">
-            <img src="img/penis.svg" alt=""/>
-        </div>
-        <h2>username</h2>
-    </li>
-  </ul>
-  <div id="blocker">
+<script src="vendor/Three_r51.js"></script>
+<script src="vendor/OBJLoader.js"></script>
+<script src="vendor/cannon.js"></script>
+<script src="vendor/lodash.js"></script>
+<script src="http://schteppe.github.io/cannon.js/examples/js/PointerLockControls.js"></script>
+<!--<p class="value"></p>-->
+<header>
+    <a href="localhost:3000/game"><img src="img/logo.svg" alt=""/></a>
+</header>
+<ul class="avatars">
+</ul>
+<div id="blocker">
     <div id="instructions">
-      <button >Click to play</button>
+        <button>Click to play</button>
     </div>
-  </div>
+</div>
 
-  <script src="vendor/controls.js"></script>
-  <script src="dist/game.js"></script>
-  <script>
-      setTimeout(function(){
-        console.log(Game.playerData);
-      },3000);
-  </script>
+<script src="vendor/controls.js"></script>
+<script src="dist/game.js"></script>
+<script>
+    $(function () {
+        var currentURl = function () {
+            var url = window.location.href;
+            var loc = window.location;
+            if (loc.port != undefined) {
+                var url = loc.protocol + '//' + loc.hostname + ':' + loc.port;
+            } else {
+                var url = loc.protocol + '//' + loc.hostname;
+            }
+            return url;
+        };
+        var socket = io.connect(currentURl());
+        var $avatars = $('.avatars');
+
+        socket.on('mothership', function (o) {
+            if (!o.init) {
+                $avatars.empty();
+                if (o.message != "noplayers") {
+                    for (var player in o) {
+//                        console.log("player " + player);
+                        var currentplayer = o[player].player;
+                        $avatars.append('<li><div class="circle" style="background-color: #' + currentplayer.color + '"><img src="img/penis.svg" alt=""/></div><h2>' + currentplayer.uid + '</h2></li>');
+                    }
+                } else {
+                    $avatars.html("<h2>No players</h2>");
+                }
+            } else {
+//                console.log(o);
+            }
+        });
+    });
+</script>
 </body>
 </html>
