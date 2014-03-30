@@ -489,25 +489,25 @@ $(function() {
       var tmpGyroVector = new THREE.Vector3();
       tmpGyroVector.copy(gyroVector);
 
-      if (this.oldGyroRotation.x == -999) {
-        this.oldGyroRotation = gyroVector;
+      if (player.oldGyroRotation.x == -999) {
+        player.oldGyroRotation = gyroVector;
       }
 
-      tmpGyroVector.subSelf(this.oldGyroRotation);
+      tmpGyroVector.subSelf(player.oldGyroRotation);
 
-      this.targetplayerRotation.addSelf(tmpGyroVector);
+      player.targetplayerRotation.addSelf(tmpGyroVector);
 
       tempTargetCopy = new THREE.Vector3();
-      tempTargetCopy.copy(this.targetplayerRotation);
+      tempTargetCopy.copy(player.targetplayerRotation);
 
-      tempTargetCopy.subSelf(this.playerRotation);
+      tempTargetCopy.subSelf(player.playerRotation);
       tempTargetCopy.multiplyScalar(0.2);
 
-      this.playerRotation.addSelf(tempTargetCopy);
+      player.playerRotation.addSelf(tempTargetCopy);
 
-      player.setShootDirection(this.playerRotation);
+      player.setShootDirection(player.playerRotation);
 
-      this.oldGyroRotation = gyroVector;
+      player.oldGyroRotation = gyroVector;
     }
 
     if (controls.enabled) {

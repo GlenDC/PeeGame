@@ -14,9 +14,6 @@ $(function() {
 
   window.Game = {};
   window.Game.socket = io.connect(currentURl());
-  Game.playerRotation   = new THREE.Vector3(0, 1, 0);
-  Game.targetplayerRotation   = new THREE.Vector3(0, 0, 0);
-  Game.oldGyroRotation  = new THREE.Vector3(-999, 0, 0);
   var collidableMeshList = [];
   window.Game.playerData = {};
   window.Resources = {};
@@ -492,25 +489,25 @@ $(function() {
       var tmpGyroVector = new THREE.Vector3();
       tmpGyroVector.copy(gyroVector);
 
-      if (Game.oldGyroRotation.x == -999) {
-        Game.oldGyroRotation = gyroVector;
+      if (player.oldGyroRotation.x == -999) {
+        player.oldGyroRotation = gyroVector;
       }
 
-      tmpGyroVector.subSelf(Game.oldGyroRotation);
+      tmpGyroVector.subSelf(player.oldGyroRotation);
 
-      Game.targetplayerRotation.addSelf(tmpGyroVector);
+      player.targetplayerRotation.addSelf(tmpGyroVector);
 
       tempTargetCopy = new THREE.Vector3();
-      tempTargetCopy.copy(Game.targetplayerRotation);
+      tempTargetCopy.copy(player.targetplayerRotation);
 
-      tempTargetCopy.subSelf(Game.playerRotation);
+      tempTargetCopy.subSelf(player.playerRotation);
       tempTargetCopy.multiplyScalar(0.2);
 
-      Game.playerRotation.addSelf(tempTargetCopy);
+      player.playerRotation.addSelf(tempTargetCopy);
 
-      player.setShootDirection(Game.playerRotation);
+      player.setShootDirection(player.playerRotation);
 
-      Game.oldGyroRotation = gyroVector;
+      player.oldGyroRotation = gyroVector;
     }
 
     if (controls.enabled) {
@@ -527,6 +524,10 @@ $(function() {
   this.balls  = [];
   this.ballMeshes = [];
   this.forceScale = 0.01;
+
+  this.playerRotation = new THREE.Vector3(0, 1, 0);
+  this.targetplayerRotation = new THREE.Vector3(0, 0, 0);
+  this.oldGyroRotation = new THREE.Vector3(-999, 0, 0);
 
   this.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
   this.shootDirection = new THREE.Vector3();
