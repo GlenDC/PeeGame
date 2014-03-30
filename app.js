@@ -61,6 +61,7 @@ app.post('/connect', function (req, res) {
             "uid": name,
             "color": color,
             "sound": sound,
+            "isPeeing" : false,
             "gyro": {
                 x: "no value :(",
                 y: "no value :(",
@@ -160,10 +161,11 @@ io.sockets.on('connection', function (socket) {
                 "uid": data.uid,
                 "color": data.color,
                 "gyro": data.gyro,
-                "sound": data.sound
+                "sound": data.sound,
+                "isPeeing": data.isPeeing
             }
         };
-//        console.log("connection incoming from ",data);
+//        console.log("connection incoming from ",data.isPeeing);
 
         if (players.length == 0) {
             players.push(player);
@@ -173,6 +175,7 @@ io.sockets.on('connection', function (socket) {
                 if (val != undefined && val.uid == player.player.uid) {
                     detected = true;
                     players[i]['player'].gyro = data.gyro;
+                    players[i]['player'].isPeeing = data.isPeeing;
                 }
             }
             if (!detected) {

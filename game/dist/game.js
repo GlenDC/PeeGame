@@ -14,9 +14,10 @@ $(function() {
 
   window.Game = {};
   window.Game.socket = io.connect(currentURl());
-  Game.playerRotation   = new THREE.Vector3(0, 0, 0);
+  Game.playerRotation   = new THREE.Vector3(0, 1, 0);
   Game.targetplayerRotation   = new THREE.Vector3(0, 0, 0);
   Game.oldGyroRotation  = new THREE.Vector3(-999, 0, 0);
+  var collidableMeshList = [];
   window.Game.playerData = {};
   window.Resources = {};
   var player = new Player({});
@@ -238,8 +239,138 @@ $(function() {
 
     window.addEventListener( 'resize', onWindowResize, false );
 
+    // Add new boxes
+    var halfExtents = new CANNON.Vec3(0.5,0.5,0.5);
+    var boxShape = new CANNON.Box(halfExtents);
+    var boxGeometry = new THREE.CubeGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
+    for(var i=0; i<5; i++){ 
+      var x = (-2*i)+3;
+      var y = 2;
+      var z = -5;
+      var boxBody = new CANNON.RigidBody(5,boxShape);
+      var boxMesh = new THREE.Mesh( boxGeometry, material );
+      Game.world.add(boxBody);
+      Game.scene.add(boxMesh);
+      boxBody.position.set(x,y,z);
+      boxMesh.position.set(x,y,z);
+      boxMesh.castShadow = true;
+      boxMesh.receiveShadow = true;
+      boxMesh.useQuaternion = true;
+      boxes.push(boxBody);
+      boxMeshes.push(boxMesh);
+    }
+
+    // Add cans
+    var halfExtents = new CANNON.Vec3(0.25,0.5,0.25);
+    var boxShape = new CANNON.Box(halfExtents);
+    //var boxShape = new CANNON.Cylinder(0.25,0.25,2*0.25,10);
+    var boxGeometry = new THREE.CubeGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
+    //var boxGeometry = new CANNON.RigidBody(mass,boxShape);
+    var maesImage = new THREE.MeshLambertMaterial({
+        map: THREE.ImageUtils.loadTexture('../res/images/maes.jpeg')
+      });
+
+    for(var i=0; i<5; i++){ 
+      var x = (-2*i)+3;
+      var y = 4;
+      var z = -5;
+      var boxBody = new CANNON.RigidBody(5,boxShape);
+      var boxMesh = new THREE.Mesh( boxGeometry, maesImage );
+      Game.world.add(boxBody);
+      Game.scene.add(boxMesh);
+      boxBody.position.set(x,y,z);
+      boxMesh.position.set(x,y,z);
+      boxMesh.castShadow = true;
+      boxMesh.receiveShadow = true;
+      boxMesh.useQuaternion = true;
+      boxes.push(boxBody);
+      boxMeshes.push(boxMesh);
+    }
+
+    // Add OBJ can
+
+    var loader = new THREE.OBJLoader();
+        loader.addEventListener( 'load', function ( event ) {
+
+          var object = event.content;
+
+          object.traverse( function ( child ) {
+
+            if ( child instanceof THREE.Mesh ) {
+
+              child.material.map = texture;
+
+            }
+
+          } );
+          
+          object.scale.x = object.scale.y = object.scale.z = 2;
+          //object.position.x = 10;
+          scene.add( object );
+
+        });
+        loader.load( '../res/models/can-maes.obj' );
+
+    /*** OBJ Loading ***/
+    /*var loader = new THREE.OBJLoader();
+   
+    // As soon as the OBJ has been loaded this function looks for a mesh
+    // inside the data and applies the texture to it.
+    loader.load( '../res/models/can-maes.obj', function ( event ) {
+      var object = event;
+      object.traverse( function ( child ) {
+        if ( child instanceof THREE.Mesh ) {
+          child.material.map = texture;
+        }
+      } );
+   
+      // My initial model was too small, so I scaled it upwards.
+      object.scale = new THREE.Vector3( 25, 25, 25 );
+   
+      // You can change the position of the object, so that it is not
+      // centered in the view and leaves some space for overlay text.
+      object.position.y -= 2.5;
+      Game.scene.add( object );
+    });*/
+
+    /*var loader = new THREE.OBJLoader();
+    var objURL = '../res/models/can-maes.obj';
+    loader.load( objURL, function ( object ) {
+      object.position.y = -10;
+      Game.scene.add( object );
+    } );
+
+    var loader = new THREE.OBJLoader();
+      loader.load( '../res/models/can-maes.obj', function ( object ) {
+
+        object.traverse( function ( child ) {
+
+          if ( child instanceof THREE.Mesh ) {
+
+            child.material.map = texture;
+
+          }
+
+        } );
+
+        object.position.y = -10;
+        Game.scene.add( object );
+
+      } );*/
+
+    /*var loader = new THREE.OBJMTLLoader();
+        loader.load( '../res/models/can-maes.obj', '../res/models/can-maes.mtl', function ( object ) {
+
+          object.position.y = - 5;
+          Game.scene.add( object );
+
+        } );*/
+      
+
+    // Check detection pee / cans
+
     // Add boxes
-    var halfExtents = new CANNON.Vec3(1,1,1);
+    /*var halfExtents = new CANNON.Vec3(1,1,1);
     var boxShape = new CANNON.Box(halfExtents);
     var boxGeometry = new THREE.CubeGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
     for(var i=0; i<7; i++){
@@ -257,10 +388,10 @@ $(function() {
       boxMesh.useQuaternion = true;
       boxes.push(boxBody);
       boxMeshes.push(boxMesh);
-    }
+    }*/
 
     // Add linked boxes
-    var size = 0.5;
+    /*var size = 0.5;
     var he = new CANNON.Vec3(size,size,size*0.1);
     var boxShape = new CANNON.Box(he);
     var mass = 0;
@@ -292,7 +423,7 @@ $(function() {
         mass=0.3;
       }
       last = boxbody;
-    }
+    }*/
   }
 
   function onWindowResize() {

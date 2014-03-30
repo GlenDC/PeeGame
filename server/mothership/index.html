@@ -35,10 +35,11 @@
                 b.empty();
                 if (o.message != "noplayers") {
                     for (var player in o) {
-                        console.log("player " + player);
+//                        console.log("player " + player);
                         var currentplayer = o[player].player;
                         b.append(
                                 "<p> name = " + currentplayer.uid + "</p>" +
+                                "<p> isPeeing = " + currentplayer.isPeeing + "</p>" +
                                         "<p> x = " + currentplayer.gyro.x + "</p>" +
                                         "<p> y = " + currentplayer.gyro.y + "</p>" +
                                         "<p> z = " + currentplayer.gyro.z + "</p>" +
@@ -50,7 +51,7 @@
                     b.append("<h2>No players</h2>");
                 }
             } else {
-                console.log(o);
+//                console.log(o);
             }
 
         });

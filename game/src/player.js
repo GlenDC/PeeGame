@@ -3,6 +3,7 @@ var Player = function(args) {
   this.color  = args.color;
   this.balls  = [];
   this.ballMeshes = [];
+  this.forceScale = 0.0;
 
   this.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
   this.shootDirection = new THREE.Vector3();
@@ -41,7 +42,7 @@ Player.prototype.pee = function() {
 
   //this.getShootDir();
   ballBody.velocity.set(this.shootDirection.x * this.shootVelo,
-      this.shootDirection.y * this.shootVelo + 6 + (Math.random() * 4),
+      (this.shootDirection.y * this.shootVelo + 6 + (Math.random() * 4)) * this.forceScale,
       this.shootDirection.z * this.shootVelo);
 
   // Move the ball outside the player sphere
@@ -66,6 +67,15 @@ Player.prototype.updateBalls = function() {
     this.balls[i].quaternion.copy(this.ballMeshes[i].quaternion);
   }
 };
+
+Player.prototype.update = function( active ) {
+  if(active && this.forceScale < 0.99) {
+    this.forceScale *= 1.15;
+  } else if(!active && this.forceScale > 0.01) {
+    this.forceScale *= 0.85;
+  }
+};
+
 /*
 Player.prototype.getShootDir = function() {
   this.shootDirection.set(0,0,1);

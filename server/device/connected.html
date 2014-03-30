@@ -9,6 +9,7 @@
     <script src="../js/socket.io.min.js"></script>
     <link rel="stylesheet" href="../assets/css/app.css"/>
     <link rel="stylesheet" href="../assets/css/connected.css"/>
+
 </head>
 <body>
 <!--<div class="container">-->
@@ -36,6 +37,7 @@
 </audio>
 <div class="center">
     <h1 class="dick-name">Johnson</h1>
+
     <div class="penis"></div>
     <!--<div class="nigga-penis penis"></div>-->
     <div class="druppels toptobottom"></div>
@@ -45,8 +47,6 @@
 <script>
 
     $(function () {
-        var RAND = Math.floor(Math.random() * 3) + 1;
-        var plas = $("#plas"+ RAND)[0];
         var zipper = $("#zipper")[0];
 
         zipper.play();
@@ -64,7 +64,6 @@
             }
             return url;
         };
-
         var queryParam = function (name) {
             name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
             var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -76,6 +75,9 @@
 
         var userColor = queryParam('color');
         var userName = queryParam('uid');
+        var userSound = queryParam('sound');
+        var plas = $("#plas"+ userSound)[0];
+
 
         var socket = io.connect(currentURl());
         $('body').css('background-color', '#' + userColor);
@@ -93,7 +95,7 @@
                 $('.penis').addClass('shake');
                 e.preventDefault();
                 gyro.startTracking(function (o) {
-                    sendGyroData(o);
+                    sendGyroData(o, true);
                     b.html("<p> name = " + userName + "</p>" +
                             "<p> x = " + o.x + "</p>" +
                             "<p> y = " + o.y + "</p>" +
@@ -105,6 +107,8 @@
                 playSounds(plas);
             },
             touchend: function () {
+                gyro.stopTracking();
+                sendGyroData(null, false);
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
@@ -114,7 +118,7 @@
                 $('.druppels').addClass('topTobottom');
                 $('.penis').addClass('shake');
                 gyro.startTracking(function (o) {
-                    sendGyroData(o);
+                    sendGyroData(o, true);
                     b.html("<p> name = " + userName + "</p>" +
                             "<p> x = " + o.x + "</p>" +
                             "<p> y = " + o.y + "</p>" +
@@ -126,6 +130,7 @@
                 playSounds(plas);
             },
             mouseleave: function () {
+                gyro.stopTracking();
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
@@ -134,19 +139,27 @@
             }
         });
 
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
 
 
         //SETUP Player object
         var player = {
             "uid": userName,
             "color": userColor,
-            "gyro": {}
+            "gyro": {},
+            "isPeeing": false
         };
 
         gyro.frequency = 200;
 
-        var sendGyroData = function (o) {
+        var sendGyroData = function (o, peeing) {
+            if (o == null) {
+                o = player.gyro;
+            }
             player.gyro = o;
+            player.isPeeing = peeing;
             socket.emit('player_data', player);
         };
 
