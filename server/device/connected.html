@@ -23,6 +23,10 @@
     <input type="hidden" value="" id="uid" name="uid"/>
     <input class="logout" type="submit" value="×"/>
 </form>
+<audio preload="auto" id='twerkNoise'>
+    <source src="../assets/img/twerkit.mp3"></source>
+    <source src="../assets/img/twerkit.ogg"></source>
+</audio>
 <div class="center">
     <h1 class="dick-name">Johnson</h1>
     <div class="penis"></div>
@@ -70,6 +74,8 @@
 
         var clearToPiss = false
 
+        var twerkNoise = $("#twerkNoise")[0];
+
         $('.penis').on({
             touchstart: function () {
                 $('.druppels').addClass('topTobottom');
@@ -84,16 +90,36 @@
                             "<p> beta = " + o.beta + "</p>" +
                             "<p> gamma = " + o.gamma + "</p>");
                 });
+                twerkNoise.pause();
+
+                twerkNoise.addEventListener('ended', function() {
+                    this.currentTime = 0;
+                    this.play();
+                }, false);
+
+                twerkNoise.play();
             },
             touchend: function () {
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
+                twerkNoise.pause();
+                twerkNoise.currentTime = 0;
                 gyro.stopTracking();
             },
             mouseenter: function () {
                 $('.druppels').addClass('topTobottom');
                 $('.penis').addClass('shake');
+
+                twerkNoise.pause();
+
+                twerkNoise.addEventListener('ended', function() {
+                    this.currentTime = 0;
+                    this.play();
+                }, false);
+
+                twerkNoise.play();
+
                 gyro.startTracking(function (o) {
                     sendGyroData(o);
                     b.html("<p> name = " + userName + "</p>" +
@@ -109,9 +135,13 @@
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
+                twerkNoise.pause();
+                twerkNoise.currentTime = 0;
                 gyro.stopTracking();
             }
         });
+
+
 
         //SETUP Player object
         var player = {
