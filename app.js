@@ -1,7 +1,8 @@
 // Import the Express module
 var express = require('express'),
     path = require('path'),
-    util = require('util');
+    util = require('util'),
+    mysql = require('mysql');
 
 /** PLAYERS CONTAINS ALL ACTIVE PLAYERS*/
 var players = [];
@@ -61,7 +62,7 @@ app.post('/connect', function (req, res) {
             "uid": name,
             "color": color,
             "sound": sound,
-            "isPeeing" : false,
+            "isPeeing": false,
             "gyro": {
                 x: "no value :(",
                 y: "no value :(",
@@ -77,18 +78,17 @@ app.post('/connect', function (req, res) {
         players.push(player);
     } else {
         for (var i in players) {
-            console.log(players[i].player.uid);
-            var val = players[i];
-            if (val.player.uid == player.player.uid) {
-                detected = true;
-            }
+                var val = players[i];
+                if (val.player.uid == player.player.uid) {
+                    detected = true;
+                }
         }
         if (!detected) {
             players.push(player);
         }
     }
     req.method = 'get';
-    res.redirect('server/device/connected.html?uid=' + name + '&color=' + color + "&sound=" +sound);
+    res.redirect('server/device/connected.html?uid=' + name + '&color=' + color + "&sound=" + sound);
 });
 
 
@@ -152,7 +152,7 @@ var noplayersmentioned = false;
 // Reduce the logging output of Socket.IO
 io.set('log level', 1);
 io.sockets.on('connection', function (socket) {
-    var self_socket = socket;
+    var self_socket = socket,detected = false;
 
 
     socket.on('player_data', function (data) {
@@ -187,6 +187,7 @@ io.sockets.on('connection', function (socket) {
     });
     self_socket.emit("mothership", {init: "server here"});
 });
+
 
 
 
