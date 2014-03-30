@@ -187,7 +187,7 @@ $(function() {
     Game.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
     Game.scene = new THREE.Scene();
-    Game.scene.fog = new THREE.Fog( 0x000000, 0, 500 );
+    Game.scene.fog = new THREE.Fog( 0xFFFFFF, 500, 500 );
 
     var ambient = new THREE.AmbientLight( 0x111111 );
     Game.scene.add( ambient );
@@ -426,6 +426,21 @@ $(function() {
       }
       last = boxbody;
     }*/
+
+    var geometry = new THREE.CubeGeometry( 1000, 1000, 1000 );
+
+    var texture = THREE.ImageUtils.loadTexture(  "../res/images/background1.jpg" );
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 2.2, 2.2 );
+
+    var material = new THREE.MeshBasicMaterial( {
+        color: 0xffffff, 
+        map: texture,
+        side: THREE.BackSide
+    } );
+
+    var mesh = new THREE.Mesh( geometry, material );
+    Game.scene.add( mesh );
   }
 
   function onWindowResize() {
@@ -531,6 +546,7 @@ $(function() {
   this.color  = args.color;
   this.balls  = [];
   this.ballMeshes = [];
+  this.forceScale = 0.0;
 
   this.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
   this.shootDirection = new THREE.Vector3();
@@ -569,7 +585,7 @@ Player.prototype.pee = function() {
 
   //this.getShootDir();
   ballBody.velocity.set(this.shootDirection.x * this.shootVelo,
-      this.shootDirection.y * this.shootVelo + 6 + (Math.random() * 4),
+      (this.shootDirection.y * this.shootVelo + 6 + (Math.random() * 4)) * this.forceScale,
       this.shootDirection.z * this.shootVelo);
 
   // Move the ball outside the player sphere
@@ -594,6 +610,15 @@ Player.prototype.updateBalls = function() {
     this.balls[i].quaternion.copy(this.ballMeshes[i].quaternion);
   }
 };
+
+Player.prototype.update = function( active ) {
+  if(active && this.forceScale < 0.99) {
+    this.forceScale *= 1.15;
+  } else if(!active && this.forceScale > 0.01) {
+    this.forceScale *= 0.85;
+  }
+};
+
 /*
 Player.prototype.getShootDir = function() {
   this.shootDirection.set(0,0,1);

@@ -187,7 +187,7 @@ $(function() {
     Game.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
     Game.scene = new THREE.Scene();
-    Game.scene.fog = new THREE.Fog( 0x000000, 0, 500 );
+    Game.scene.fog = new THREE.Fog( 0xFFFFFF, 500, 500 );
 
     var ambient = new THREE.AmbientLight( 0x111111 );
     Game.scene.add( ambient );
@@ -426,6 +426,21 @@ $(function() {
       }
       last = boxbody;
     }*/
+
+    var geometry = new THREE.CubeGeometry( 1000, 1000, 1000 );
+
+    var texture = THREE.ImageUtils.loadTexture(  "../res/images/background1.jpg" );
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 2.2, 2.2 );
+
+    var material = new THREE.MeshBasicMaterial( {
+        color: 0xffffff, 
+        map: texture,
+        side: THREE.BackSide
+    } );
+
+    var mesh = new THREE.Mesh( geometry, material );
+    Game.scene.add( mesh );
   }
 
   function onWindowResize() {
