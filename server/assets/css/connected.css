@@ -22,7 +22,7 @@ h1.dick-name {
 .penis {
     bottom: 0px;
     position: absolute;
-    display: block;
+    display: none;
     width: 170px;
     cursor: pointer;
     background: url('../img/penis.svg') no-repeat;
@@ -42,7 +42,7 @@ h1.dick-name {
 .nigga-penis {
     bottom: 0px;
     position: absolute;
-    display: block;
+    display: none;
     width: 170px;
     cursor: pointer;
     background: url('../img/nigga-penis.svg') repeat-y;

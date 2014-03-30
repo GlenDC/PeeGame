@@ -17,15 +17,32 @@
   <header>
       <a href="localhost:3000/game"><img src="img/logo.svg" alt=""/></a>
   </header>
+  <ul class="avatars">
+    <li>
+        <div class="circle">
+            <img src="img/penis.svg" alt=""/>
+        </div>
+        <h2>username</h2>
+    </li>
+    <li>
+        <div class="circle">
+            <img src="img/penis.svg" alt=""/>
+        </div>
+        <h2>username</h2>
+    </li>
+  </ul>
   <div id="blocker">
     <div id="instructions">
-      <span style="font-size:40px">Click to play</span>
-      <br />
-      (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
+      <button >Click to play</button>
     </div>
   </div>
 
   <script src="vendor/controls.js"></script>
   <script src="dist/game.js"></script>
+  <script>
+      setTimeout(function(){
+        console.log(Game.playerData);
+      },3000);
+  </script>
 </body>
 </html>

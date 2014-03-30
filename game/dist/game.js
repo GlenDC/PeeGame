@@ -198,6 +198,13 @@ $(function() {
     light = new THREE.SpotLight( 0xffffff );
     light.position.set( 10, 30, 20 );
     light.target.position.set( 0, 0, 0 );
+
+    otherLight = new THREE.HemisphereLight( 0xDDDDDD, 0x0000FF, 0.75);
+    otherLight.position.set( 0.0001, 100.0001, -18.5001 );
+
+    Game.scene.add(otherLight);
+
+
     if(true){
       light.castShadow = true;
 
@@ -223,7 +230,9 @@ $(function() {
     geometry = new THREE.PlaneGeometry( 300, 300, 50, 50 );
     geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 
-    material = new THREE.MeshLambertMaterial( { color: 0xDDDDDD } );
+    material = new THREE.MeshLambertMaterial( { color: 0xDDFF77 } );
+    // woodMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF77 } );
+    woodMaterial = new THREE.MeshLambertMaterial( { color: 0x964B00 } );
     THREE.ColorUtils.adjustHSV( material.color, 0, 0, 0.9 );
 
 
@@ -246,12 +255,13 @@ $(function() {
     var halfExtents = new CANNON.Vec3(0.5,0.2,0.5);
     var boxShape = new CANNON.Box(halfExtents);
     var boxGeometry = new THREE.CubeGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
-    for(var i=0; i<5; i++){
-      var x = (-2*i)+3;
+    for(var i=0; i<8; i++){
+      var x =  -i +3;
       var y = 2;
       var z = -4.2;
       var boxBody = new CANNON.RigidBody(5,boxShape);
-      var boxMesh = new THREE.Mesh( boxGeometry, material );
+      var boxMesh = new THREE.Mesh( boxGeometry, woodMaterial );
+
       Game.world.add(boxBody);
       Game.scene.add(boxMesh);
       boxBody.position.set(x,y,z);
@@ -273,8 +283,8 @@ $(function() {
         map: THREE.ImageUtils.loadTexture('../res/images/maes.jpeg')
       });
 
-    for(var i=0; i<5; i++){
-      var x = (-2*i)+3;
+    for(var i=0; i<8; i++){
+      var x =  -i + 3;
       var y = 4;
       var z = -4.2;
       var boxBody = new CANNON.RigidBody(5,boxShape);
@@ -423,7 +433,7 @@ $(function() {
     texture.repeat.set( 2.2, 2.2 );
 
     var material = new THREE.MeshBasicMaterial( {
-        color: 0xffffff, 
+        color: 0xffffff,
         map: texture,
         side: THREE.BackSide
     } );
