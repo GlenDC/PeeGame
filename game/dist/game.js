@@ -303,21 +303,16 @@ $(function() {
     // y = Math.max(-Math.PI, Math.min(Math.PI, y));
     // y /= 5;
 
+    if ( v3.y > Math.PI ) {
+      v3.y = - Math.PI;
+    }
+
     v3.z = 0;
 
     return v3;
   };
 
   var dt = 1/60;
-
-  function resolveAxis( axis ) {
-    var deg360 = Math.PI * 2.0;
-
-    if(axis < 0) axis += deg360;
-    if(axis > deg360) axis -= deg360;
-
-    return axis;
-  }
 
   function animate() {
     if (Game.playerData.length && Game.playerData[0]) {
@@ -330,10 +325,6 @@ $(function() {
       if (Game.oldGyroRotation.x == -999) {
         Game.oldGyroRotation = gyroVector;
       }
-
-      Game.oldGyroRotation.x = resolveAxis ( Game.oldGyroRotation.x );
-      Game.oldGyroRotation.y = resolveAxis ( Game.oldGyroRotation.y );
-      Game.oldGyroRotation.z = resolveAxis ( Game.oldGyroRotation.z );
 
       tmpGyroVector.subSelf(Game.oldGyroRotation);
 
@@ -348,6 +339,7 @@ $(function() {
       Game.playerRotation.addSelf(tempTargetCopy);
 
       player.setShootDirection(Game.playerRotation);
+
 
       Game.oldGyroRotation = gyroVector;
       $('.value').text(Game.playerRotation.y || 'NOTHING');
@@ -424,7 +416,7 @@ Player.prototype.pee = function() {
 
   //this.getShootDir();
   ballBody.velocity.set(this.shootDirection.x * this.shootVelo,
-      this.shootDirection.y * this.shootVelo + 10,
+      this.shootDirection.y * this.shootVelo + 6 + (Math.random() * 4),
       this.shootDirection.z * this.shootVelo);
 
   // Move the ball outside the player sphere

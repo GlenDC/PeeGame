@@ -35,7 +35,7 @@ Player.prototype.pee = function() {
 
   //this.getShootDir();
   ballBody.velocity.set(this.shootDirection.x * this.shootVelo,
-      this.shootDirection.y * this.shootVelo + 10,
+      this.shootDirection.y * this.shootVelo + 6 + (Math.random() * 4),
       this.shootDirection.z * this.shootVelo);
 
   // Move the ball outside the player sphere
