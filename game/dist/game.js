@@ -280,8 +280,9 @@ $(function() {
     var boxGeometry = new THREE.CubeGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
     //var boxGeometry = new CANNON.RigidBody(mass,boxShape);
     var maesImage = new THREE.MeshLambertMaterial({
-        map: THREE.ImageUtils.loadTexture('../res/images/maes.jpeg')
+        map: THREE.ImageUtils.loadTexture('../res/images/maes_texture.jpeg')
       });
+
 
     for(var i=0; i<8; i++){
       var x =  -i + 3;
@@ -300,17 +301,36 @@ $(function() {
       boxMeshes.push(boxMesh);
     }
 
-    // Add OBJ can
-    var loader = new THREE.OBJLoader();
-        loader.addEventListener( 'load', function ( event ) {
-          var object = event.content;
-          object.scale.x = object.scale.y = object.scale.z = 0.8;
-          object.position.z = -15;
-          object.position.x = 5;
-          //object.position.x = 10;
-          Game.scene.add( object );
-        });
-        loader.load( '../res/models/can-maes.obj' );
+    var rows = 3;
+
+    var minX = 3;
+    var maxX = minX + 6;
+    var xWidth = maxX - minX;
+    var width = halfExtents.y + 0.01;
+
+    for(var rowI=0; rowI<rows; rowI++) {
+      var boxCount = 9 - rowI;
+      for(var i=0; i < boxCount; i++){
+        var w = xWidth / boxCount
+        var x = (-i * w) + 3;
+        var y = 1 + rowI;
+        var z = -3.2;
+
+        var boxBody = new CANNON.RigidBody(5 ,boxShape);
+        var boxMesh = new THREE.Mesh( boxGeometry, maesImage );
+        Game.world.add(boxBody);
+        Game.scene.add(boxMesh);
+        boxBody.position.set(x,y,z);
+        boxMesh.position.set(x,y,z);
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        boxMesh.useQuaternion = true;
+        boxes.push(boxBody);
+        boxMeshes.push(boxMesh);
+      }
+
+    }
+
 
     /*** OBJ Loading ***/
     /*var loader = new THREE.OBJLoader();
