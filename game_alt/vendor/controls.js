@@ -42,9 +42,9 @@ var PointerLockControls = function ( camera, cannonBody ) {
     var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
     var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-    mouseRotation.x -= movementX * 0.002;
     mouseRotation.x -= movementY * 0.002;
-    mouseRotation.y = Math.max( - PI_2, Math.min( PI_2, mouseRotation.y ) );
+    mouseRotation.y -= movementX * 0.002;
+    // mouseRotation.y = Math.max( - PI_2, Math.min( PI_2, mouseRotation.y ) );
   };
 
   this.getMouseDir = function() {
