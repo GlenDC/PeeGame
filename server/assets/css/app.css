@@ -7,6 +7,12 @@
     font-style: normal;
 }
 
+html, body {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
 body {
     background-color: #add7cd;
     -webkit-touch-callout: none;

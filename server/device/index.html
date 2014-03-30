@@ -13,10 +13,23 @@
         <img class="logo" src="../assets/img/logo.svg" alt=""/>
         <form action="/connect" method="post">
             <input type="text" id="uid" name="uid" autofocus placeholder="your dick's nick">
-            <button id="connect" type="submit">UNZIP IT</button>
+            <button id="connect" type="submit">UNZIP </button>
         </form>
     </div>
 </div>
+<script>
+    $(function () {
 
+        $('form').submit(function () {
+            if($('#uid').val().length == 0){
+                $('#uid').css('border', '1px solid red');
+                return false;
+            } else {
+                return true;
+            }
+        });
+
+    });
+</script>
 </body>
 </html>
