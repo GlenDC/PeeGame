@@ -199,6 +199,12 @@ $(function() {
     light.position.set( 10, 30, 20 );
     light.target.position.set( 0, 0, 0 );
 
+    otherLight = new THREE.HemisphereLight( 0xDDDDDD, 0x0000FF, 0.75);
+    otherLight.position.set( 0.0001, 100.0001, -18.5001 );
+
+    Game.scene.add(otherLight);
+
+
     if(true){
       light.castShadow = true;
 
