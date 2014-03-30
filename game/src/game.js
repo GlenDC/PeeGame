@@ -488,7 +488,6 @@ $(function() {
       var dude = playah.player;
       var gyro = dude.gyro;
       var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
-      // player.update(dude.isPeeing);
 
       var tmpGyroVector = new THREE.Vector3();
       tmpGyroVector.copy(gyroVector);
@@ -515,6 +514,7 @@ $(function() {
     }
 
     if (controls.enabled) {
+      player.update(dude.isPeeing);
       player.updateBalls();
       player.pee();
     }

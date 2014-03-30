@@ -3,7 +3,7 @@ var Player = function(args) {
   this.color  = args.color;
   this.balls  = [];
   this.ballMeshes = [];
-  this.forceScale = 0.0;
+  this.forceScale = 0.01;
 
   this.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
   this.shootDirection = new THREE.Vector3();
@@ -69,9 +69,10 @@ Player.prototype.updateBalls = function() {
 };
 
 Player.prototype.update = function( active ) {
-  if(active && this.forceScale < 0.99) {
+  if (active && this.forceScale < 0.99) {
     this.forceScale *= 1.15;
   } else if(!active && this.forceScale > 0.01) {
     this.forceScale *= 0.85;
   }
+  console.log(active, this.forceScale);
 };
