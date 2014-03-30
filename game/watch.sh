@@ -1,1 +1,0 @@
-coffee -cwo build/ lib

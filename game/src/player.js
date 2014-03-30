@@ -7,6 +7,7 @@ var Player = function(args) {
   this.shootDirection = new THREE.Vector3();
   this.shootVelo = 3;
   this.projector = new THREE.Projector();
+  this.vectorForward = new THREE.Vector3(0, 0, -1);
 };
 
 Player.prototype.pee = function() {
@@ -32,7 +33,7 @@ Player.prototype.pee = function() {
     Game.scene.remove(oldestBallMesh);
   }
 
-  this.getShootDir(this.shootDirection);
+  //this.getShootDir();
   ballBody.velocity.set(this.shootDirection.x * this.shootVelo,
       this.shootDirection.y * this.shootVelo + 10,
       this.shootDirection.z * this.shootVelo);
@@ -46,6 +47,12 @@ Player.prototype.pee = function() {
   ballMesh.useQuaternion = true;
 };
 
+Player.prototype.setShootDirection = function( mouseRotation ) {
+  var quat = new THREE.Quaternion();
+  quat.setFromEuler({x:mouseRotation.x, y:mouseRotation.y, z:0},"XYZ");
+  quat.multiplyVector3(this.vectorForward, this.shootDirection);
+}
+
 Player.prototype.updateBalls = function() {
   // Update ball positions
   for (var i=0; i<this.balls.length; i++) {
@@ -53,13 +60,13 @@ Player.prototype.updateBalls = function() {
     this.balls[i].quaternion.copy(this.ballMeshes[i].quaternion);
   }
 };
-
-Player.prototype.getShootDir = function(targetVec) {
-  var vector = targetVec;
-  targetVec.set(0,0,1);
+/*
+Player.prototype.getShootDir = function() {
+  this.shootDirection.set(0,0,1);
   this.projector.unprojectVector(vector, Game.camera);
   var ray = new THREE.Ray(Game.sphereBody.position, vector.subSelf(Game.sphereBody.position).normalize() );
-  targetVec.x = ray.direction.x;
-  targetVec.y = ray.direction.y;
-  targetVec.z = ray.direction.z;
+  this.shootDirection.x = ray.direction.x;
+  this.shootDirection.y = ray.direction.y;
+  this.shootDirection.z = ray.direction.z;
 };
+*/

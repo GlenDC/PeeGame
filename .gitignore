@@ -2,3 +2,5 @@
 *.sublime*
 pee_game
 ./idea
+
+node_modules/
