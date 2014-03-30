@@ -299,10 +299,11 @@ $(function() {
     v3.x /=5;
 
     v3.y = alpha * Math.PI / 180;
-      // y = Math.max(-Math.PI, Math.min(Math.PI, y));
-      // y /= 5;
+    // y = Math.max(-Math.PI, Math.min(Math.PI, y));
+    // y /= 5;
 
     v3.z = 0;
+
     return v3;
   };
   var dt = 1/60;
@@ -316,21 +317,15 @@ $(function() {
         Game.oldGyroRotation = gyroVector;
       }
 
-      var x = gyro.beta * Math.PI / 180;
-      x = Math.max(-Math.PI/2, Math.min(Math.PI/2, x));
-      x /= 5;
-      x = 0;
+      Game.playerRotation += gyroVector - game.oldGyroRotation;
 
-      var y = gyro.alpha * Math.PI / 180;
-      // y = Math.max(-Math.PI, Math.min(Math.PI, y));
-      // y /= 5;
+      
 
-      var z = 0; // gyro.gamma * Math.PI / 180;
+      player.setShootDirection(Game.playerRotation);
 
-      $('.value').text(y);
-      var dir = new THREE.Vector3(x, y, z);
-      player.setShootDirection(dir);
+      game.oldGyroRotation = gyroVector;
     }
+
     requestAnimationFrame( animate );
     if ( controls.enabled ) {
       Game.world.step(dt);
