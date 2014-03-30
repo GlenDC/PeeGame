@@ -14,25 +14,28 @@ $(function() {
 
   window.Game = {};
   window.Game.socket = io.connect(currentURl());
-  Game.playerRotation   = new THREE.Vector3(0, 1, 0);
-  Game.targetplayerRotation   = new THREE.Vector3(0, 0, 0);
-  Game.oldGyroRotation  = new THREE.Vector3(-999, 0, 0);
   var collidableMeshList = [];
   window.Game.playerData = {};
   window.Resources = {};
-  var player = new Player({});
+  Game.players = {};
 
-  var setPlayerColors = function(playerData) {
-    if (playerData.length <= 0) return;
-    var dude = playerData[0].player;
-    if ( !player.color && dude ) {
-      player.setPeeColor(parseInt(dude.color, 16));
+  var setupPlayers = function(playerData) {
+    if (playerData.length <= 0 || !playerData[0]) return;
+
+    for (var i = 0; i < playerData.length; i++) {
+      var dude    = playerData[i].player;
+
+      if ( dude.uid && !Game.players[dude.uid] ) {
+        Game.players[dude.uid] = new Player({})
+        Game.players[dude.uid].setPeeColor(parseInt(dude.color, 16));
+      }
     }
   };
+
   Game.socket.on('mothership', function (o) {
     if (!o.init) {
       Game.playerData = o;
-      setPlayerColors(o);
+      setupPlayers(o);
     }
   });
 
@@ -243,7 +246,7 @@ $(function() {
     var halfExtents = new CANNON.Vec3(0.5,0.2,0.5);
     var boxShape = new CANNON.Box(halfExtents);
     var boxGeometry = new THREE.CubeGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
-    for(var i=0; i<5; i++){ 
+    for(var i=0; i<5; i++){
       var x = (-2*i)+3;
       var y = 2;
       var z = -4.2;
@@ -270,7 +273,7 @@ $(function() {
         map: THREE.ImageUtils.loadTexture('../res/images/maes.jpeg')
       });
 
-    for(var i=0; i<5; i++){ 
+    for(var i=0; i<5; i++){
       var x = (-2*i)+3;
       var y = 4;
       var z = -4.2;
@@ -288,34 +291,20 @@ $(function() {
     }
 
     // Add OBJ can
-
     var loader = new THREE.OBJLoader();
         loader.addEventListener( 'load', function ( event ) {
-
           var object = event.content;
-
-          /*object.traverse( function ( child ) {
-
-            if ( child instanceof THREE.Mesh ) {
-
-              child.material.map = texture;
-
-            }
-
-          } );*/
-          
           object.scale.x = object.scale.y = object.scale.z = 0.8;
           object.position.z = -15;
           object.position.x = 5;
           //object.position.x = 10;
           Game.scene.add( object );
-
         });
         loader.load( '../res/models/can-maes.obj' );
 
     /*** OBJ Loading ***/
     /*var loader = new THREE.OBJLoader();
-   
+
     // As soon as the OBJ has been loaded this function looks for a mesh
     // inside the data and applies the texture to it.
     loader.load( '../res/models/can-maes.obj', function ( event ) {
@@ -325,10 +314,10 @@ $(function() {
           child.material.map = texture;
         }
       } );
-   
+
       // My initial model was too small, so I scaled it upwards.
       object.scale = new THREE.Vector3( 25, 25, 25 );
-   
+
       // You can change the position of the object, so that it is not
       // centered in the view and leaves some space for overlay text.
       object.position.y -= 2.5;
@@ -367,7 +356,7 @@ $(function() {
           Game.scene.add( object );
 
         } );*/
-      
+
 
     // Check detection pee / cans
 
@@ -476,10 +465,6 @@ $(function() {
     // y = Math.max(-Math.PI, Math.min(Math.PI, y));
     // y /= 5;
 
-    //if ( v3.y > Math.PI ) {
-      //v3.y = - Math.PI;
-    //}
-
     v3.z = 0;
 
     return v3;
@@ -487,57 +472,64 @@ $(function() {
 
   var dt = 1/60;
 
-  function animate() {
-    if (Game.playerData.length && Game.playerData[0]) {
-      var dude = Game.playerData[0].player;
-      var gyro   = dude.gyro;
-      var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
-
-      var tmpGyroVector = new THREE.Vector3();
-      tmpGyroVector.copy(gyroVector);
-
-      if (Game.oldGyroRotation.x == -999) {
-        Game.oldGyroRotation = gyroVector;
-      }
-
-      tmpGyroVector.subSelf(Game.oldGyroRotation);
-
-      Game.targetplayerRotation.addSelf(tmpGyroVector);
-
-      tempTargetCopy = new THREE.Vector3();
-      tempTargetCopy.copy(Game.targetplayerRotation);
-
-      tempTargetCopy.subSelf(Game.playerRotation);
-      tempTargetCopy.multiplyScalar(0.2);
-
-      Game.playerRotation.addSelf(tempTargetCopy);
-
-      player.setShootDirection(Game.playerRotation);
-
-
-      Game.oldGyroRotation = gyroVector;
-    }
-
-    requestAnimationFrame( animate );
-    if ( controls.enabled ) {
-      Game.world.step(dt);
-      player.updateBalls();
-
+  function updateBoxes() {
       // Update box positions
       for(var i=0; i<boxes.length; i++){
         boxes[i].position.copy(boxMeshes[i].position);
         boxes[i].quaternion.copy(boxMeshes[i].quaternion);
       }
+  };
 
-      // player.setShootDirection( controls.getMouseDir() );
+  function animate() {
+    for (var key in Game.players) {
+      animatePlayer(key, Game.players[key]);
+    };
 
-      // Shoot ballz
-      if ( controls.enabled == true ) { player.pee(); }
-    }
+    requestAnimationFrame(animate);
+    updateBoxes();
+    Game.world.step(dt);
 
     controls.update( Date.now() - time );
     renderer.render( Game.scene, Game.camera );
     time = Date.now();
+  }
+
+  function animatePlayer(uid, player) {
+    var playah = _.find(Game.playerData, function(pl) { return pl.player.uid == uid; });
+    if (Game.playerData.length > 0 && playah) {
+      var dude = playah.player;
+      var gyro = dude.gyro;
+      var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
+
+      var tmpGyroVector = new THREE.Vector3();
+      tmpGyroVector.copy(gyroVector);
+
+      if (player.oldGyroRotation.x == -999) {
+        player.oldGyroRotation = gyroVector;
+      }
+
+      tmpGyroVector.subSelf(player.oldGyroRotation);
+
+      player.targetplayerRotation.addSelf(tmpGyroVector);
+
+      tempTargetCopy = new THREE.Vector3();
+      tempTargetCopy.copy(player.targetplayerRotation);
+
+      tempTargetCopy.subSelf(player.playerRotation);
+      tempTargetCopy.multiplyScalar(0.2);
+
+      player.playerRotation.addSelf(tempTargetCopy);
+
+      player.setShootDirection(player.playerRotation);
+
+      player.oldGyroRotation = gyroVector;
+    }
+
+    if (controls.enabled) {
+      player.update(dude.isPeeing);
+      player.updateBalls();
+      player.pee();
+    }
   }
 
 });
@@ -546,7 +538,11 @@ $(function() {
   this.color  = args.color;
   this.balls  = [];
   this.ballMeshes = [];
-  this.forceScale = 0.0;
+  this.forceScale = 0.01;
+
+  this.playerRotation = new THREE.Vector3(0, 1, 0);
+  this.targetplayerRotation = new THREE.Vector3(0, 0, 0);
+  this.oldGyroRotation = new THREE.Vector3(-999, 0, 0);
 
   this.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
   this.shootDirection = new THREE.Vector3();
@@ -556,7 +552,6 @@ $(function() {
 };
 
 Player.prototype.setPeeColor = function(col) {
-  console.log("Set color", col);
   this.peeMaterial = new THREE.MeshLambertMaterial( { color: col } );
 };
 
@@ -612,20 +607,9 @@ Player.prototype.updateBalls = function() {
 };
 
 Player.prototype.update = function( active ) {
-  if(active && this.forceScale < 0.99) {
+  if (active && this.forceScale < 0.99) {
     this.forceScale *= 1.15;
   } else if(!active && this.forceScale > 0.01) {
     this.forceScale *= 0.85;
   }
 };
-
-/*
-Player.prototype.getShootDir = function() {
-  this.shootDirection.set(0,0,1);
-  this.projector.unprojectVector(vector, Game.camera);
-  var ray = new THREE.Ray(Game.sphereBody.position, vector.subSelf(Game.sphereBody.position).normalize() );
-  this.shootDirection.x = ray.direction.x;
-  this.shootDirection.y = ray.direction.y;
-  this.shootDirection.z = ray.direction.z;
-};
-*/
