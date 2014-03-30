@@ -54,7 +54,7 @@
                         var opacity = 1;
                         if(currentplayer.isPeeing === false) { opacity=0.5; }
 
-                        players.push('<li><div class="circle" style="background-color: #' + currentplayer.color +'"><img src="img/penis.svg" alt="" style="opacity:' + opacity +';"/></div><h2>' + currentplayer.uid + '</h2></li>');
+                        players.push('<li><div class="circle" style="background-color: #' + currentplayer.color +'"><img src="img/penis.svg" alt="" style="opacity:' + opacity +';"/></div><h2>' + decodeURIComponent(currentplayer.uid) + '</h2></li>');
                     }
                     $avatars.html(players);
                 } else {
