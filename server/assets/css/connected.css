@@ -233,12 +233,13 @@ img.penis:hover {
     display: block;
     position: absolute;
     top: 0;
-    right: 10px;
+    right: 0px;
     font-size: 30px;
     color: #fff;
     background: none repeat scroll 0 0 transparent;
     border: medium none;
     border-spacing: 0;
+    padding: 0
 }
 #logout_form {
     display: block;
