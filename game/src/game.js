@@ -303,13 +303,18 @@ $(function() {
     // y = Math.max(-Math.PI, Math.min(Math.PI, y));
     // y /= 5;
 
+    if ( v3.y > Math.PI ) {
+      v3.y = - Math.PI;
+    }
+
     v3.z = 0;
 
     return v3;
   };
-  var dt = 1/60;
-  function animate() {
 
+  var dt = 1/60;
+
+  function animate() {
     if (Game.playerData.length && Game.playerData[0]) {
       var gyro = Game.playerData[0].player.gyro;
       var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
@@ -322,6 +327,7 @@ $(function() {
       }
 
       tmpGyroVector.subSelf(Game.oldGyroRotation);
+
       Game.targetplayerRotation.addSelf(tmpGyroVector);
 
       tempTargetCopy = new THREE.Vector3();
@@ -333,6 +339,7 @@ $(function() {
       Game.playerRotation.addSelf(tempTargetCopy);
 
       player.setShootDirection(Game.playerRotation);
+
 
       Game.oldGyroRotation = gyroVector;
       $('.value').text(Game.playerRotation.y || 'NOTHING');

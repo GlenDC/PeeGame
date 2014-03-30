@@ -67,8 +67,8 @@
 
         var socket = io.connect(currentURl());
         $('body').css('background-color', '#' + userColor);
-        $('#logout_form #uid').val(userName);
-        $('.dick-name').html(userName);
+        $('#logout_form #uid').val(decodeURIComponent(userName));
+        $('.dick-name').html(decodeURIComponent(userName));
         //$('.penis').disableSelection();
 
         document.body.style.webkitTouchCallout = 'none';
@@ -78,9 +78,10 @@
         var twerkNoise = $("#twerkNoise")[0];
 
         $('.penis').on({
-            touchstart: function () {
+            touchstart: function (e) {
                 $('.druppels').addClass('topTobottom');
                 $('.penis').addClass('shake');
+                e.preventDefault();
                 gyro.startTracking(function (o) {
                     sendGyroData(o);
                     b.html("<p> name = " + userName + "</p>" +
