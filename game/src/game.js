@@ -301,6 +301,14 @@ $(function() {
     renderer.setSize( window.innerWidth, window.innerHeight );
   }
 
+  var fixGimbal = function(axis) {
+    if ( axis < 0 ) {
+      return Math.PI * 2 - axis;
+    } else {
+      return axis;
+    }
+  };
+
   var generateRotationVector = function(beta, alpha) {
     var v3 = new THREE.Vector3()
 
@@ -309,12 +317,20 @@ $(function() {
     v3.x /=5;
 
     v3.y = alpha * Math.PI / 180;
+    v3.y = fixGimbal(v3.y);
+    if ( v3.y < Math.PI/2 ) {
+      v3.y += Math.PI;
+    } else if ( v3.y > (Math.PI*2*0.75) ) {
+      v3.y -= Math.PI;
+    }
+
+    $('.value').text(v3.y || 'NOTHING');
     // y = Math.max(-Math.PI, Math.min(Math.PI, y));
     // y /= 5;
 
-    if ( v3.y > Math.PI ) {
-      v3.y = - Math.PI;
-    }
+    //if ( v3.y > Math.PI ) {
+      //v3.y = - Math.PI;
+    //}
 
     v3.z = 0;
 
@@ -352,7 +368,6 @@ $(function() {
 
 
       Game.oldGyroRotation = gyroVector;
-      $('.value').text(Game.playerRotation.y || 'NOTHING');
     }
 
     requestAnimationFrame( animate );
