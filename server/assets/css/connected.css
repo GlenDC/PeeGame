@@ -39,6 +39,26 @@ h1.dick-name {
     -webkit-transform: translate3d(0,0,0);
 }
 
+.nigga-penis {
+    bottom: 0px;
+    position: absolute;
+    display: block;
+    width: 170px;
+    cursor: pointer;
+    background: url('../img/nigga-penis.svg') repeat-y;
+    width: 170px;
+    height: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    overflow-y: hidden;
+    -webkit-transform: translate3d(0,0,0);
+}
+
 img.penis:hover {
 
 }
