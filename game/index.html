@@ -51,7 +51,10 @@
                     for (var player in o) {
 //                        console.log("player " + player);
                         var currentplayer = o[player].player;
-                        players.push('<li><div class="circle" style="background-color: #' + currentplayer.color + '"><img src="img/penis.svg" alt=""/></div><h2>' + currentplayer.uid + '</h2></li>');
+                        var opacity = 1;
+                        if(currentplayer.isPeeing === false) { opacity=0.5; }
+
+                        players.push('<li><div class="circle" style="background-color: #' + currentplayer.color +'"><img src="img/penis.svg" alt="" style="opacity:' + opacity +';"/></div><h2>' + currentplayer.uid + '</h2></li>');
                     }
                     $avatars.html(players);
                 } else {
