@@ -21,13 +21,22 @@ $(function() {
   window.Resources = {};
   var player = new Player({});
 
+  var setPlayerColors = function(playerData) {
+    if (playerData.length <= 0) return;
+    var dude = playerData[0].player;
+    if ( !player.color && dude ) {
+      player.setPeeColor(parseInt(dude.color, 16));
+    }
+  };
   Game.socket.on('mothership', function (o) {
-    if (!o.init) { Game.playerData = o; }
+    if (!o.init) {
+      Game.playerData = o;
+      setPlayerColors(o);
+    }
   });
 
   Resources.ballShape = new CANNON.Sphere(0.03);
   Resources.ballGeometry = new THREE.SphereGeometry(Resources.ballShape.radius);
-  Resources.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
 
   Game.scene = new THREE.Scene();
   Game.camera = null;
@@ -292,6 +301,14 @@ $(function() {
     renderer.setSize( window.innerWidth, window.innerHeight );
   }
 
+  var fixGimbal = function(axis) {
+    if ( axis < 0 ) {
+      return Math.PI * 2 - axis;
+    } else {
+      return axis;
+    }
+  };
+
   var generateRotationVector = function(beta, alpha) {
     var v3 = new THREE.Vector3()
 
@@ -300,12 +317,20 @@ $(function() {
     v3.x /=5;
 
     v3.y = alpha * Math.PI / 180;
+    v3.y = fixGimbal(v3.y);
+    if ( v3.y < Math.PI/2 ) {
+      v3.y += Math.PI;
+    } else if ( v3.y > (Math.PI*2*0.75) ) {
+      v3.y -= Math.PI;
+    }
+
+    $('.value').text(v3.y || 'NOTHING');
     // y = Math.max(-Math.PI, Math.min(Math.PI, y));
     // y /= 5;
 
-    if ( v3.y > Math.PI ) {
-      v3.y = - Math.PI;
-    }
+    //if ( v3.y > Math.PI ) {
+      //v3.y = - Math.PI;
+    //}
 
     v3.z = 0;
 
@@ -316,7 +341,8 @@ $(function() {
 
   function animate() {
     if (Game.playerData.length && Game.playerData[0]) {
-      var gyro = Game.playerData[0].player.gyro;
+      var dude = Game.playerData[0].player;
+      var gyro   = dude.gyro;
       var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
 
       var tmpGyroVector = new THREE.Vector3();
@@ -342,7 +368,6 @@ $(function() {
 
 
       Game.oldGyroRotation = gyroVector;
-      $('.value').text(Game.playerRotation.y || 'NOTHING');
     }
 
     requestAnimationFrame( animate );
@@ -367,17 +392,6 @@ $(function() {
     time = Date.now();
   }
 
-  // Particles
-  var particles = new THREE.Geometry;
-  for (var p = 0; p < 2000; p++) {
-    var particle = new THREE.Vector3(Math.random() * 500 - 250, Math.random() * 500 - 250, Math.random() * 500 - 250);
-    particles.vertices.push(particle);
-  }
-
-  var particleMaterial  = new THREE.ParticleBasicMaterial({ color: 0xeeeeee, size: 2 });
-  var particleSystem    = new THREE.ParticleSystem(particles, particleMaterial);
-
-  Game.scene.add(particleSystem);
 });
 ;var Player = function(args) {
   this.name   = args.name;
@@ -385,10 +399,16 @@ $(function() {
   this.balls  = [];
   this.ballMeshes = [];
 
+  this.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
   this.shootDirection = new THREE.Vector3();
   this.shootVelo = 3;
   this.projector = new THREE.Projector();
   this.vectorForward = new THREE.Vector3(0, 0, -1);
+};
+
+Player.prototype.setPeeColor = function(col) {
+  console.log("Set color", col);
+  this.peeMaterial = new THREE.MeshLambertMaterial( { color: col } );
 };
 
 Player.prototype.pee = function() {
@@ -399,7 +419,7 @@ Player.prototype.pee = function() {
   var maxBalls = 100;
 
   var ballBody = new CANNON.RigidBody(1, Resources.ballShape);
-  var ballMesh = new THREE.Mesh( Resources.ballGeometry, Resources.peeMaterial );
+  var ballMesh = new THREE.Mesh( Resources.ballGeometry, this.peeMaterial );
   Game.world.add(ballBody);
   Game.scene.add(ballMesh);
   ballMesh.castShadow = true;

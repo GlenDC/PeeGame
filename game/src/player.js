@@ -4,10 +4,16 @@ var Player = function(args) {
   this.balls  = [];
   this.ballMeshes = [];
 
+  this.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
   this.shootDirection = new THREE.Vector3();
   this.shootVelo = 3;
   this.projector = new THREE.Projector();
   this.vectorForward = new THREE.Vector3(0, 0, -1);
+};
+
+Player.prototype.setPeeColor = function(col) {
+  console.log("Set color", col);
+  this.peeMaterial = new THREE.MeshLambertMaterial( { color: col } );
 };
 
 Player.prototype.pee = function() {
@@ -18,7 +24,7 @@ Player.prototype.pee = function() {
   var maxBalls = 100;
 
   var ballBody = new CANNON.RigidBody(1, Resources.ballShape);
-  var ballMesh = new THREE.Mesh( Resources.ballGeometry, Resources.peeMaterial );
+  var ballMesh = new THREE.Mesh( Resources.ballGeometry, this.peeMaterial );
   Game.world.add(ballBody);
   Game.scene.add(ballMesh);
   ballMesh.castShadow = true;
