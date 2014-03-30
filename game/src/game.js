@@ -1,7 +1,28 @@
 $(function() {
+
+  var currentURl = function () {
+    var url = window.location.href;
+    var loc = window.location;
+    if (loc.port != undefined) {
+      var url = loc.protocol + '//' + loc.hostname + ':' + loc.port;
+    } else {
+      var url = loc.protocol + '//' + loc.hostname;
+    }
+    return url;
+  };
+
+
   window.Game = {};
+  window.Game.socket = io.connect(currentURl());
+  Game.playerRotation   = new THREE.Vector3(0, 0, 0);
+  Game.oldGyroRotation  = new THREE.Vector3(-999, 0, 0);
+  window.Game.playerData = {};
   window.Resources = {};
   var player = new Player({});
+
+  Game.socket.on('mothership', function (o) {
+    if (!o.init) { Game.playerData = o; }
+  });
 
   Resources.ballShape = new CANNON.Sphere(0.03);
   Resources.ballGeometry = new THREE.SphereGeometry(Resources.ballShape.radius);
@@ -270,8 +291,46 @@ $(function() {
     renderer.setSize( window.innerWidth, window.innerHeight );
   }
 
+  var generateRotationVector = function(beta, alpha) {
+    var v3 = new THREE.Vector3()
+
+    v3.x = beta * Math.PI / 180;
+    v3.x = Math.max(-Math.PI/2, Math.min(Math.PI/2, v3.x));
+    v3.x /=5;
+
+    v3.y = alpha * Math.PI / 180;
+      // y = Math.max(-Math.PI, Math.min(Math.PI, y));
+      // y /= 5;
+
+    v3.z = 0;
+    return v3;
+  };
   var dt = 1/60;
   function animate() {
+
+    if (Game.playerData.length && Game.playerData[0]) {
+      var gyro = Game.playerData[0].player.gyro;
+      var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
+
+      if (Game.oldGyroRotation.x == -999) {
+        Game.oldGyroRotation = gyroVector;
+      }
+
+      var x = gyro.beta * Math.PI / 180;
+      x = Math.max(-Math.PI/2, Math.min(Math.PI/2, x));
+      x /= 5;
+      x = 0;
+
+      var y = gyro.alpha * Math.PI / 180;
+      // y = Math.max(-Math.PI, Math.min(Math.PI, y));
+      // y /= 5;
+
+      var z = 0; // gyro.gamma * Math.PI / 180;
+
+      $('.value').text(y);
+      var dir = new THREE.Vector3(x, y, z);
+      player.setShootDirection(dir);
+    }
     requestAnimationFrame( animate );
     if ( controls.enabled ) {
       Game.world.step(dt);
@@ -283,7 +342,7 @@ $(function() {
         boxes[i].quaternion.copy(boxMeshes[i].quaternion);
       }
 
-      player.setShootDirection( controls.getMouseDir() );
+      // player.setShootDirection( controls.getMouseDir() );
 
       // Shoot ballz
       if ( controls.enabled == true ) { player.pee(); }
