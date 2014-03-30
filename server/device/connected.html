@@ -13,19 +13,21 @@
 </head>
 <body>
 <!--<div class="container">-->
-    <!--<div class="wrapper">-->
-    <!--</div>-->
+<!--<div class="wrapper">-->
+<!--</div>-->
 <!--</div>-->
 <div>
 
 </div>
-<form method="get" action="/logout" id="logout_form">
+<form method="post" action="/logout" id="logout_form">
     <input type="hidden" value="" id="uid" name="uid"/>
     <input class="logout" type="submit" value="×"/>
 </form>
 <div class="center">
     <h1 class="dick-name">Johnson</h1>
-    <img class="bounceInUp penis" src="../assets/img/penis.svg" onerror="this.onerror=null; this.src='../assets/img/penis.png'"/>
+    <img class="bounceInUp penis" src="../assets/img/penis.svg"
+         onerror="this.onerror=null; this.src='../assets/img/penis.png'"/>
+
     <div class="druppels toptobottom"></div>
     <!--<img class="druppels" src="../assets/img/druppels.svg" onerror="this.onerror=null; class="druppels"/>-->
 </div>
@@ -65,26 +67,50 @@
         $('#logout_form #uid').val(userName);
         $('.dick-name').html(userName);
 
-        document.body.style.webkitTouchCallout='none';
+        document.body.style.webkitTouchCallout = 'none';
+
+        var clearToPiss = false
 
         $('.penis').on({
-           touchstart: function (){
-               $('.druppels').addClass('topTobottom');
-               $('.penis').addClass('shake');
-           },
-            touchend : function(){
-               $('.penis').removeClass('bounceInUp');
-               $('.penis').removeClass('shake');
-               $('.druppels').removeClass('topTobottom');
-           },
-            mouseenter: function (){
+            touchstart: function () {
                 $('.druppels').addClass('topTobottom');
                 $('.penis').addClass('shake');
+                gyro.startTracking(function (o) {
+                    sendGyroData(o);
+                    b.html("<p> name = " + userName + "</p>" +
+                            "<p> x = " + o.x + "</p>" +
+                            "<p> y = " + o.y + "</p>" +
+                            "<p> z = " + o.z + "</p>" +
+                            "<p> alpha = " + o.alpha + "</p>" +
+                            "<p> beta = " + o.beta + "</p>" +
+                            "<p> gamma = " + o.gamma + "</p>");
+                });
             },
-            mouseleave : function(){
+            touchend: function () {
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
+                gyro.stopTracking();
+            },
+            mouseenter: function () {
+                $('.druppels').addClass('topTobottom');
+                $('.penis').addClass('shake');
+                gyro.startTracking(function (o) {
+                    sendGyroData(o);
+                    b.html("<p> name = " + userName + "</p>" +
+                            "<p> x = " + o.x + "</p>" +
+                            "<p> y = " + o.y + "</p>" +
+                            "<p> z = " + o.z + "</p>" +
+                            "<p> alpha = " + o.alpha + "</p>" +
+                            "<p> beta = " + o.beta + "</p>" +
+                            "<p> gamma = " + o.gamma + "</p>");
+                });
+            },
+            mouseleave: function () {
+                $('.penis').removeClass('bounceInUp');
+                $('.penis').removeClass('shake');
+                $('.druppels').removeClass('topTobottom');
+                gyro.stopTracking();
             }
         });
 
@@ -95,24 +121,14 @@
             "gyro": {}
         };
 
+        gyro.frequency = 200;
 
         var sendGyroData = function (o) {
             player.gyro = o;
             socket.emit('player_data', player);
         };
 
-
         console.log("Starting Tracking");
-        gyro.startTracking(function (o) {
-            sendGyroData(o);
-            b.html("<p> name = " + userName + "</p>" +
-                    "<p> x = " + o.x + "</p>" +
-                    "<p> y = " + o.y + "</p>" +
-                    "<p> z = " + o.z + "</p>" +
-                    "<p> alpha = " + o.alpha + "</p>" +
-                    "<p> beta = " + o.beta + "</p>" +
-                    "<p> gamma = " + o.gamma + "</p>");
-        });
     });
 </script>
 </body>
