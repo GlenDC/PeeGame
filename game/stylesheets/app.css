@@ -108,15 +108,20 @@ button:hover {
     border-radius: 100px;
     overflow: hidden;
     position: relative;
-    width: 95px;
+    width: 70px;
+    margin: 0 auto;
 }
 
 .avatars li img {
-    width: 50px;
     border-radius: 50px;
-    width: 40px;
+    width: 30px;
     display: block;
     margin: 0 auto;
     bottom: -20px;
     position: relative;
+}
+
+.avatars h2 {
+    font-size: 16px;
+    text-align: center;
 }
