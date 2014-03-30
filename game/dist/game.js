@@ -536,7 +536,6 @@ $(function() {
 };
 
 Player.prototype.setPeeColor = function(col) {
-  console.log("Set color", col);
   this.peeMaterial = new THREE.MeshLambertMaterial( { color: col } );
 };
 
@@ -597,5 +596,4 @@ Player.prototype.update = function( active ) {
   } else if(!active && this.forceScale > 0.01) {
     this.forceScale *= 0.85;
   }
-  console.log(active, this.forceScale);
 };
