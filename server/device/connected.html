@@ -130,10 +130,10 @@
             },
             mouseleave: function () {
                 gyro.stopTracking();
+                sendGyroData(null, false);
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
-                gyro.stopTracking();
                 endSounds(plas);
             }
         });
