@@ -240,13 +240,13 @@ $(function() {
     window.addEventListener( 'resize', onWindowResize, false );
 
     // Add new boxes
-    var halfExtents = new CANNON.Vec3(0.5,0.5,0.5);
+    var halfExtents = new CANNON.Vec3(0.5,0.2,0.5);
     var boxShape = new CANNON.Box(halfExtents);
     var boxGeometry = new THREE.CubeGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
     for(var i=0; i<5; i++){ 
       var x = (-2*i)+3;
       var y = 2;
-      var z = -5;
+      var z = -4.2;
       var boxBody = new CANNON.RigidBody(5,boxShape);
       var boxMesh = new THREE.Mesh( boxGeometry, material );
       Game.world.add(boxBody);
@@ -273,7 +273,7 @@ $(function() {
     for(var i=0; i<5; i++){ 
       var x = (-2*i)+3;
       var y = 4;
-      var z = -5;
+      var z = -4.2;
       var boxBody = new CANNON.RigidBody(5,boxShape);
       var boxMesh = new THREE.Mesh( boxGeometry, maesImage );
       Game.world.add(boxBody);
@@ -294,7 +294,7 @@ $(function() {
 
           var object = event.content;
 
-          object.traverse( function ( child ) {
+          /*object.traverse( function ( child ) {
 
             if ( child instanceof THREE.Mesh ) {
 
@@ -302,11 +302,13 @@ $(function() {
 
             }
 
-          } );
+          } );*/
           
-          object.scale.x = object.scale.y = object.scale.z = 2;
+          object.scale.x = object.scale.y = object.scale.z = 0.8;
+          object.position.z = -15;
+          object.position.x = 5;
           //object.position.x = 10;
-          scene.add( object );
+          Game.scene.add( object );
 
         });
         loader.load( '../res/models/can-maes.obj' );
