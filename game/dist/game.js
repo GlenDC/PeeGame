@@ -1,7 +1,29 @@
 $(function() {
+
+  var currentURl = function () {
+    var url = window.location.href;
+    var loc = window.location;
+    if (loc.port != undefined) {
+      var url = loc.protocol + '//' + loc.hostname + ':' + loc.port;
+    } else {
+      var url = loc.protocol + '//' + loc.hostname;
+    }
+    return url;
+  };
+
+
   window.Game = {};
+  window.Game.socket = io.connect(currentURl());
+  Game.playerRotation   = new THREE.Vector3(0, 0, 0);
+  Game.targetplayerRotation   = new THREE.Vector3(0, 0, 0);
+  Game.oldGyroRotation  = new THREE.Vector3(-999, 0, 0);
+  window.Game.playerData = {};
   window.Resources = {};
   var player = new Player({});
+
+  Game.socket.on('mothership', function (o) {
+    if (!o.init) { Game.playerData = o; }
+  });
 
   Resources.ballShape = new CANNON.Sphere(0.03);
   Resources.ballGeometry = new THREE.SphereGeometry(Resources.ballShape.radius);
@@ -270,8 +292,52 @@ $(function() {
     renderer.setSize( window.innerWidth, window.innerHeight );
   }
 
+  var generateRotationVector = function(beta, alpha) {
+    var v3 = new THREE.Vector3()
+
+    v3.x = beta * Math.PI / 180;
+    v3.x = Math.max(-Math.PI/2, Math.min(Math.PI/2, v3.x));
+    v3.x /=5;
+
+    v3.y = alpha * Math.PI / 180;
+    // y = Math.max(-Math.PI, Math.min(Math.PI, y));
+    // y /= 5;
+
+    v3.z = 0;
+
+    return v3;
+  };
   var dt = 1/60;
   function animate() {
+
+    if (Game.playerData.length && Game.playerData[0]) {
+      var gyro = Game.playerData[0].player.gyro;
+      var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
+
+      var tmpGyroVector = new THREE.Vector3();
+      tmpGyroVector.copy(gyroVector);
+
+      if (Game.oldGyroRotation.x == -999) {
+        Game.oldGyroRotation = gyroVector;
+      }
+
+      tmpGyroVector.subSelf(Game.oldGyroRotation);
+      Game.targetplayerRotation.addSelf(tmpGyroVector);
+
+      tempTargetCopy = new THREE.Vector3();
+      tempTargetCopy.copy(Game.targetplayerRotation);
+
+      tempTargetCopy.subSelf(Game.playerRotation);
+      tempTargetCopy.multiplyScalar(0.2);
+
+      Game.playerRotation.addSelf(tempTargetCopy);
+
+      player.setShootDirection(Game.playerRotation);
+
+      Game.oldGyroRotation = gyroVector;
+      $('.value').text(Game.playerRotation.y || 'NOTHING');
+    }
+
     requestAnimationFrame( animate );
     if ( controls.enabled ) {
       Game.world.step(dt);
@@ -282,6 +348,8 @@ $(function() {
         boxes[i].position.copy(boxMeshes[i].position);
         boxes[i].quaternion.copy(boxMeshes[i].quaternion);
       }
+
+      // player.setShootDirection( controls.getMouseDir() );
 
       // Shoot ballz
       if ( controls.enabled == true ) { player.pee(); }
@@ -304,3 +372,75 @@ $(function() {
 
   Game.scene.add(particleSystem);
 });
+;var Player = function(args) {
+  this.name   = args.name;
+  this.color  = args.color;
+  this.balls  = [];
+  this.ballMeshes = [];
+
+  this.shootDirection = new THREE.Vector3();
+  this.shootVelo = 3;
+  this.projector = new THREE.Projector();
+  this.vectorForward = new THREE.Vector3(0, 0, -1);
+};
+
+Player.prototype.pee = function() {
+  var Game = window.Game;
+  var x = Game.sphereBody.position.x;
+  var y = Game.sphereBody.position.y - 0.75;
+  var z = Game.sphereBody.position.z;
+  var maxBalls = 100;
+
+  var ballBody = new CANNON.RigidBody(1, Resources.ballShape);
+  var ballMesh = new THREE.Mesh( Resources.ballGeometry, Resources.peeMaterial );
+  Game.world.add(ballBody);
+  Game.scene.add(ballMesh);
+  ballMesh.castShadow = true;
+  ballMesh.receiveShadow = true;
+  this.balls.push(ballBody);
+  this.ballMeshes.push(ballMesh);
+
+  if (this.balls.length >= maxBalls) {
+    var oldestBall = this.balls.shift();
+    var oldestBallMesh = this.ballMeshes.shift();
+    Game.world.remove(oldestBall);
+    Game.scene.remove(oldestBallMesh);
+  }
+
+  //this.getShootDir();
+  ballBody.velocity.set(this.shootDirection.x * this.shootVelo,
+      this.shootDirection.y * this.shootVelo + 10,
+      this.shootDirection.z * this.shootVelo);
+
+  // Move the ball outside the player sphere
+  x += this.shootDirection.x * (Resources.sphereShape.radius*1.02 + Resources.ballShape.radius);
+  y += this.shootDirection.y * (Resources.sphereShape.radius*1.02 + Resources.ballShape.radius);
+  z += this.shootDirection.z * (Resources.sphereShape.radius*1.02 + Resources.ballShape.radius);
+  ballBody.position.set(x,y,z);
+  ballMesh.position.set(x,y,z);
+  ballMesh.useQuaternion = true;
+};
+
+Player.prototype.setShootDirection = function( mouseRotation ) {
+  var quat = new THREE.Quaternion();
+  quat.setFromEuler({x:mouseRotation.x, y:mouseRotation.y, z:0},"XYZ");
+  quat.multiplyVector3(this.vectorForward, this.shootDirection);
+}
+
+Player.prototype.updateBalls = function() {
+  // Update ball positions
+  for (var i=0; i<this.balls.length; i++) {
+    this.balls[i].position.copy(this.ballMeshes[i].position);
+    this.balls[i].quaternion.copy(this.ballMeshes[i].quaternion);
+  }
+};
+/*
+Player.prototype.getShootDir = function() {
+  this.shootDirection.set(0,0,1);
+  this.projector.unprojectVector(vector, Game.camera);
+  var ray = new THREE.Ray(Game.sphereBody.position, vector.subSelf(Game.sphereBody.position).normalize() );
+  this.shootDirection.x = ray.direction.x;
+  this.shootDirection.y = ray.direction.y;
+  this.shootDirection.z = ray.direction.z;
+};
+*/
