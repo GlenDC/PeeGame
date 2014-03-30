@@ -25,9 +25,7 @@
 </form>
 <div class="center">
     <h1 class="dick-name">Johnson</h1>
-    <img class="bounceInUp penis" src="../assets/img/penis.svg"
-         onerror="this.onerror=null; this.src='../assets/img/penis.png'"/>
-
+    <div class="penis"></div>
     <div class="druppels toptobottom"></div>
     <!--<img class="druppels" src="../assets/img/druppels.svg" onerror="this.onerror=null; class="druppels"/>-->
 </div>
@@ -66,6 +64,7 @@
         $('body').css('background-color', '#' + userColor);
         $('#logout_form #uid').val(userName);
         $('.dick-name').html(userName);
+        //$('.penis').disableSelection();
 
         document.body.style.webkitTouchCallout = 'none';
 

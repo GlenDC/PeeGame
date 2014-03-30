@@ -19,12 +19,22 @@ h1.dick-name {
     width: 170px;
 }
 
-img.penis {
-    bottom: -40px;
+.penis {
+    bottom: 0;
     position: absolute;
     display: block;
     width: 170px;
     cursor: pointer;
+    background: url('../img/penis.svg') no-repeat;
+    width: 170px;
+    height: 398px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 img.penis:hover {
@@ -36,10 +46,11 @@ img.penis:hover {
     z-index: -1;
     opacity: 0;
     background-image: url(../img/druppels.svg);
-    background-repeat:repeat-y;
-    height: 1000px;
+    background-repeat: repeat-y;
+    height: 400px;
     margin: 0 auto;
     width: 44px;
+    top: 0;
 }
 
 .dick-name {
