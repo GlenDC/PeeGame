@@ -307,9 +307,19 @@ $(function() {
 
     return v3;
   };
-  var dt = 1/60;
-  function animate() {
 
+  var dt = 1/60;
+
+  function resolveAxis( axis ) {
+    var deg360 = Math.PI * 2.0;
+
+    if(axis < 0) axis += deg360;
+    if(axis > deg360) axis -= deg360;
+
+    return axis;
+  }
+
+  function animate() {
     if (Game.playerData.length && Game.playerData[0]) {
       var gyro = Game.playerData[0].player.gyro;
       var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
@@ -321,7 +331,12 @@ $(function() {
         Game.oldGyroRotation = gyroVector;
       }
 
+      Game.oldGyroRotation.x = resolveAxis ( Game.oldGyroRotation.x );
+      Game.oldGyroRotation.y = resolveAxis ( Game.oldGyroRotation.y );
+      Game.oldGyroRotation.z = resolveAxis ( Game.oldGyroRotation.z );
+
       tmpGyroVector.subSelf(Game.oldGyroRotation);
+
       Game.targetplayerRotation.addSelf(tmpGyroVector);
 
       tempTargetCopy = new THREE.Vector3();

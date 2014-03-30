@@ -331,11 +331,11 @@ $(function() {
         Game.oldGyroRotation = gyroVector;
       }
 
-      tmpGyroVector.subSelf(Game.oldGyroRotation);
+      Game.oldGyroRotation.x = resolveAxis ( Game.oldGyroRotation.x );
+      Game.oldGyroRotation.y = resolveAxis ( Game.oldGyroRotation.y );
+      Game.oldGyroRotation.z = resolveAxis ( Game.oldGyroRotation.z );
 
-      tmpGyroVector.x = resolveAxis ( tmpGyroVector.x );
-      tmpGyroVector.y = resolveAxis ( tmpGyroVector.y );
-      tmpGyroVector.z = resolveAxis ( tmpGyroVector.z );
+      tmpGyroVector.subSelf(Game.oldGyroRotation);
 
       Game.targetplayerRotation.addSelf(tmpGyroVector);
 
