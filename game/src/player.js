@@ -3,7 +3,11 @@ var Player = function(args) {
   this.color  = args.color;
   this.balls  = [];
   this.ballMeshes = [];
-  this.forceScale = 0.0;
+  this.forceScale = 0.01;
+
+  this.playerRotation = new THREE.Vector3(0, 1, 0);
+  this.targetplayerRotation = new THREE.Vector3(0, 0, 0);
+  this.oldGyroRotation = new THREE.Vector3(-999, 0, 0);
 
   this.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
   this.shootDirection = new THREE.Vector3();
@@ -13,7 +17,6 @@ var Player = function(args) {
 };
 
 Player.prototype.setPeeColor = function(col) {
-  console.log("Set color", col);
   this.peeMaterial = new THREE.MeshLambertMaterial( { color: col } );
 };
 
@@ -69,20 +72,9 @@ Player.prototype.updateBalls = function() {
 };
 
 Player.prototype.update = function( active ) {
-  if(active && this.forceScale < 0.99) {
+  if (active && this.forceScale < 0.99) {
     this.forceScale *= 1.15;
   } else if(!active && this.forceScale > 0.01) {
     this.forceScale *= 0.85;
   }
 };
-
-/*
-Player.prototype.getShootDir = function() {
-  this.shootDirection.set(0,0,1);
-  this.projector.unprojectVector(vector, Game.camera);
-  var ray = new THREE.Ray(Game.sphereBody.position, vector.subSelf(Game.sphereBody.position).normalize() );
-  this.shootDirection.x = ray.direction.x;
-  this.shootDirection.y = ray.direction.y;
-  this.shootDirection.z = ray.direction.z;
-};
-*/
