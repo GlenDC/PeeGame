@@ -85,7 +85,7 @@
                 $('.penis').addClass('shake');
                 e.preventDefault();
                 gyro.startTracking(function (o) {
-                    sendGyroData(o);
+                    sendGyroData(o, true);
                     b.html("<p> name = " + userName + "</p>" +
                             "<p> x = " + o.x + "</p>" +
                             "<p> y = " + o.y + "</p>" +
@@ -106,10 +106,12 @@
             },
             touchend: function () {
                 gyro.stopTracking();
+                sendGyroData(null, false);
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
                 twerkNoise.pause();
+
             },
             mouseenter: function () {
                 $('.druppels').addClass('topTobottom');
@@ -125,7 +127,7 @@
                 twerkNoise.play();
 
                 gyro.startTracking(function (o) {
-                    sendGyroData(o);
+                    sendGyroData(o, true);
                     b.html("<p> name = " + userName + "</p>" +
                             "<p> x = " + o.x + "</p>" +
                             "<p> y = " + o.y + "</p>" +
@@ -137,6 +139,7 @@
             },
             mouseleave: function () {
                 gyro.stopTracking();
+                sendGyroData(null, false);
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
@@ -152,13 +155,18 @@
         var player = {
             "uid": userName,
             "color": userColor,
-            "gyro": {}
+            "gyro": {},
+            "isPeeing": false
         };
 
         gyro.frequency = 200;
 
-        var sendGyroData = function (o) {
+        var sendGyroData = function (o, peeing) {
+            if (o == null) {
+                o = player.gyro;
+            }
             player.gyro = o;
+            player.isPeeing = peeing;
             socket.emit('player_data', player);
         };
 
