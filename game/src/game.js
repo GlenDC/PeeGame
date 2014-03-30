@@ -22,23 +22,23 @@ $(function() {
   window.Resources = {};
   Game.players = {};
 
-  var setupPlayer = function(playerData) {
+  var setupPlayers = function(playerData) {
     if (playerData.length <= 0 || !playerData[0]) return;
 
-    var dude = playerData[0].player;
+    for (var i = 0; i < playerData.length; i++) {
+      var dude    = playerData[i].player;
 
-    var player = Game.players[dude.uid];
-    if (dude.uid && !Game.players[dude.uid]) {
-      Game.players[dude.uid] = new Player({})
-      Game.players[dude.uid].setPeeColor(parseInt(dude.color, 16));
+      if ( dude.uid && !Game.players[dude.uid] ) {
+        Game.players[dude.uid] = new Player({})
+        Game.players[dude.uid].setPeeColor(parseInt(dude.color, 16));
+      }
     }
-    console.log("players", Game.players);
   };
 
   Game.socket.on('mothership', function (o) {
     if (!o.init) {
       Game.playerData = o;
-      setupPlayer(o);
+      setupPlayers(o);
     }
   });
 
@@ -453,10 +453,6 @@ $(function() {
     // y = Math.max(-Math.PI, Math.min(Math.PI, y));
     // y /= 5;
 
-    //if ( v3.y > Math.PI ) {
-      //v3.y = - Math.PI;
-    //}
-
     v3.z = 0;
 
     return v3;
@@ -464,15 +460,32 @@ $(function() {
 
   var dt = 1/60;
 
+  function updateBoxes() {
+      // Update box positions
+      for(var i=0; i<boxes.length; i++){
+        boxes[i].position.copy(boxMeshes[i].position);
+        boxes[i].quaternion.copy(boxMeshes[i].quaternion);
+      }
+  };
+
   function animate() {
-    for (key in Game.players) {
-      animatePlayer(Game.players[key]);
+    for (var key in Game.players) {
+      animatePlayer(key, Game.players[key]);
     };
+
+    requestAnimationFrame(animate);
+    updateBoxes();
+    Game.world.step(dt);
+
+    controls.update( Date.now() - time );
+    renderer.render( Game.scene, Game.camera );
+    time = Date.now();
   }
 
-  function animatePlayer(player) {
-    if (Game.playerData.length && Game.playerData[0]) {
-      var dude = Game.playerData[0].player;
+  function animatePlayer(uid, player) {
+    var playah = _.find(Game.playerData, function(pl) { return pl.player.uid == uid; });
+    if (Game.playerData.length > 0 && playah) {
+      var dude = playah.player;
       var gyro = dude.gyro;
       var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
       // player.update(dude.isPeeing);
@@ -498,29 +511,13 @@ $(function() {
 
       player.setShootDirection(Game.playerRotation);
 
-
       Game.oldGyroRotation = gyroVector;
     }
 
-    requestAnimationFrame(animate);
-
     if (controls.enabled) {
-      Game.world.step(dt);
       player.updateBalls();
-
-      // Update box positions
-      for(var i=0; i<boxes.length; i++){
-        boxes[i].position.copy(boxMeshes[i].position);
-        boxes[i].quaternion.copy(boxMeshes[i].quaternion);
-      }
-
-      // Shoot ballz
-      if ( controls.enabled == true ) { player.pee(); }
+      player.pee();
     }
-
-    controls.update( Date.now() - time );
-    renderer.render( Game.scene, Game.camera );
-    time = Date.now();
   }
 
 });
