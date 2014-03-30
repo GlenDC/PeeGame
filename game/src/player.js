@@ -75,14 +75,3 @@ Player.prototype.update = function( active ) {
     this.forceScale *= 0.85;
   }
 };
-
-/*
-Player.prototype.getShootDir = function() {
-  this.shootDirection.set(0,0,1);
-  this.projector.unprojectVector(vector, Game.camera);
-  var ray = new THREE.Ray(Game.sphereBody.position, vector.subSelf(Game.sphereBody.position).normalize() );
-  this.shootDirection.x = ray.direction.x;
-  this.shootDirection.y = ray.direction.y;
-  this.shootDirection.z = ray.direction.z;
-};
-*/

@@ -20,19 +20,25 @@ $(function() {
   var collidableMeshList = [];
   window.Game.playerData = {};
   window.Resources = {};
-  var player = new Player({});
+  Game.players = {};
 
-  var setPlayerColors = function(playerData) {
-    if (playerData.length <= 0) return;
+  var setupPlayer = function(playerData) {
+    if (playerData.length <= 0 || !playerData[0]) return;
+
     var dude = playerData[0].player;
-    if ( !player.color && dude ) {
-      player.setPeeColor(parseInt(dude.color, 16));
+
+    var player = Game.players[dude.uid];
+    if (dude.uid && !Game.players[dude.uid]) {
+      Game.players[dude.uid] = new Player({})
+      Game.players[dude.uid].setPeeColor(parseInt(dude.color, 16));
     }
+    console.log("players", Game.players);
   };
+
   Game.socket.on('mothership', function (o) {
     if (!o.init) {
       Game.playerData = o;
-      setPlayerColors(o);
+      setupPlayer(o);
     }
   });
 
@@ -243,7 +249,7 @@ $(function() {
     var halfExtents = new CANNON.Vec3(0.5,0.2,0.5);
     var boxShape = new CANNON.Box(halfExtents);
     var boxGeometry = new THREE.CubeGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
-    for(var i=0; i<5; i++){ 
+    for(var i=0; i<5; i++){
       var x = (-2*i)+3;
       var y = 2;
       var z = -4.2;
@@ -270,7 +276,7 @@ $(function() {
         map: THREE.ImageUtils.loadTexture('../res/images/maes.jpeg')
       });
 
-    for(var i=0; i<5; i++){ 
+    for(var i=0; i<5; i++){
       var x = (-2*i)+3;
       var y = 4;
       var z = -4.2;
@@ -288,34 +294,20 @@ $(function() {
     }
 
     // Add OBJ can
-
     var loader = new THREE.OBJLoader();
         loader.addEventListener( 'load', function ( event ) {
-
           var object = event.content;
-
-          /*object.traverse( function ( child ) {
-
-            if ( child instanceof THREE.Mesh ) {
-
-              child.material.map = texture;
-
-            }
-
-          } );*/
-          
           object.scale.x = object.scale.y = object.scale.z = 0.8;
           object.position.z = -15;
           object.position.x = 5;
           //object.position.x = 10;
           Game.scene.add( object );
-
         });
         loader.load( '../res/models/can-maes.obj' );
 
     /*** OBJ Loading ***/
     /*var loader = new THREE.OBJLoader();
-   
+
     // As soon as the OBJ has been loaded this function looks for a mesh
     // inside the data and applies the texture to it.
     loader.load( '../res/models/can-maes.obj', function ( event ) {
@@ -325,10 +317,10 @@ $(function() {
           child.material.map = texture;
         }
       } );
-   
+
       // My initial model was too small, so I scaled it upwards.
       object.scale = new THREE.Vector3( 25, 25, 25 );
-   
+
       // You can change the position of the object, so that it is not
       // centered in the view and leaves some space for overlay text.
       object.position.y -= 2.5;
@@ -367,7 +359,7 @@ $(function() {
           Game.scene.add( object );
 
         } );*/
-      
+
 
     // Check detection pee / cans
 
@@ -473,10 +465,17 @@ $(function() {
   var dt = 1/60;
 
   function animate() {
+    for (key in Game.players) {
+      animatePlayer(Game.players[key]);
+    };
+  }
+
+  function animatePlayer(player) {
     if (Game.playerData.length && Game.playerData[0]) {
       var dude = Game.playerData[0].player;
-      var gyro   = dude.gyro;
+      var gyro = dude.gyro;
       var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
+      // player.update(dude.isPeeing);
 
       var tmpGyroVector = new THREE.Vector3();
       tmpGyroVector.copy(gyroVector);
@@ -503,8 +502,9 @@ $(function() {
       Game.oldGyroRotation = gyroVector;
     }
 
-    requestAnimationFrame( animate );
-    if ( controls.enabled ) {
+    requestAnimationFrame(animate);
+
+    if (controls.enabled) {
       Game.world.step(dt);
       player.updateBalls();
 
@@ -513,8 +513,6 @@ $(function() {
         boxes[i].position.copy(boxMeshes[i].position);
         boxes[i].quaternion.copy(boxMeshes[i].quaternion);
       }
-
-      // player.setShootDirection( controls.getMouseDir() );
 
       // Shoot ballz
       if ( controls.enabled == true ) { player.pee(); }
