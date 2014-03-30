@@ -33,14 +33,8 @@
     <!--<img class="druppels" src="../assets/img/druppels.svg" onerror="this.onerror=null; class="druppels"/>-->
 </div>
 
-<audio preload="auto" id='plas1' class="hidden">
+<audio preload="auto" id='plas' class="hidden">
     <source src="../assets/audio/plas1.mp3"></source>
-</audio>
-<audio preload="auto" id="plas2" class="hidden">
-    <source src="../assets/audio/plas2.mp3"></source>
-</audio>
-<audio preload="auto" id="plas3" class="hidden">
-    <source src="../assets/audio/plas3.mp3"></source>
 </audio>
 <audio preload="auto" id="zipper" class="hidden">
     <source src="../assets/img/zipper.mp3"></source>
@@ -75,11 +69,14 @@
             else return results[1];
         };
 
+        var sourceURL = "../assets/audio/plas";
         var userColor = queryParam('color');
         var userName = queryParam('uid');
         var userSound = queryParam('sound');
-        var plas = $("#plas"+ userSound)[0];
-
+        var plas = $("#plas")[0];
+        $("#plas").attr("src", sourceURL + userSound + ".mp3");
+        plas.pause();
+        plas.load();//suspends and restores all audio element
 
         var socket = io.connect(currentURl());
         $('body').css('background-color', '#' + userColor);
@@ -169,7 +166,7 @@
     });
 
     function playSounds(sound){
-        console.log(sound);
+//        console.log(sound);
         sound.pause();
 
         sound.addEventListener('ended', function() {
