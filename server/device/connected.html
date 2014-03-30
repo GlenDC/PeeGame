@@ -24,11 +24,12 @@
     <input class="logout" type="submit" value="×"/>
 </form>
 <audio preload="auto" id='twerkNoise'>
-    <source src="../assets/img/twerkit.mp3"></source>
-    <source src="../assets/img/twerkit.ogg"></source>
+    <source src="../assets/audio/plas2.mp3"></source>
+    <source src="../assets/img/zipper.mp3"></source>
 </audio>
 <div class="center">
     <h1 class="dick-name">Johnson</h1>
+
     <div class="penis"></div>
     <!--<div class="nigga-penis"></div>-->
     <div class="druppels toptobottom"></div>
@@ -63,17 +64,18 @@
 
         var userColor = queryParam('color');
         var userName = queryParam('uid');
+        var userSound = queryParam('sound');
 
 
         var socket = io.connect(currentURl());
         $('body').css('background-color', '#' + userColor);
         $('#logout_form #uid').val(decodeURIComponent(userName));
         $('.dick-name').html(decodeURIComponent(userName));
+
         //$('.penis').disableSelection();
 
         document.body.style.webkitTouchCallout = 'none';
 
-        var clearToPiss = false
 
         var twerkNoise = $("#twerkNoise")[0];
 
@@ -92,9 +94,10 @@
                             "<p> beta = " + o.beta + "</p>" +
                             "<p> gamma = " + o.gamma + "</p>");
                 });
+
                 twerkNoise.pause();
 
-                twerkNoise.addEventListener('ended', function() {
+                twerkNoise.addEventListener('ended', function () {
                     this.currentTime = 0;
                     this.play();
                 }, false);
@@ -102,12 +105,11 @@
                 twerkNoise.play();
             },
             touchend: function () {
+                gyro.stopTracking();
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
                 twerkNoise.pause();
-                twerkNoise.currentTime = 0;
-                gyro.stopTracking();
             },
             mouseenter: function () {
                 $('.druppels').addClass('topTobottom');
@@ -115,7 +117,7 @@
 
                 twerkNoise.pause();
 
-                twerkNoise.addEventListener('ended', function() {
+                twerkNoise.addEventListener('ended', function () {
                     this.currentTime = 0;
                     this.play();
                 }, false);
@@ -134,16 +136,17 @@
                 });
             },
             mouseleave: function () {
+                gyro.stopTracking();
                 $('.penis').removeClass('bounceInUp');
                 $('.penis').removeClass('shake');
                 $('.druppels').removeClass('topTobottom');
                 twerkNoise.pause();
-                twerkNoise.currentTime = 0;
-                gyro.stopTracking();
             }
         });
 
-
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
 
         //SETUP Player object
         var player = {

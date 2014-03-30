@@ -53,20 +53,21 @@ var intToARGB = function (i) {
 //HANDLE POST FORM
 app.post('/connect', function (req, res) {
 //    console.log("connect request from user incoming: \n" + JSON.stringify(req.body));
-    var name = req.body.uid, color, detected;
+    var name = req.body.uid, color, detected, sound = req.body.sound;
     color = intToARGB(hashCode(name)).substring(0, 6);
 
     var player = {
         "player": {
-            "uid": req.body.uid,
+            "uid": name,
             "color": color,
+            "sound": sound,
             "gyro": {
-                x : "no value :(",
-                y : "no value :(",
-                z : "no value :(",
-                alpha : "no value :(",
-                beta : "no value :(",
-                gamma : "no value :("
+                x: "no value :(",
+                y: "no value :(",
+                z: "no value :(",
+                alpha: "no value :(",
+                beta: "no value :(",
+                gamma: "no value :("
             }
         }
     };
@@ -86,7 +87,7 @@ app.post('/connect', function (req, res) {
         }
     }
     req.method = 'get';
-    res.redirect('server/device/connected.html?uid=' + name + '&color=' + color);
+    res.redirect('server/device/connected.html?uid=' + name + '&color=' + color + "&sound=" +sound);
 });
 
 
@@ -140,7 +141,7 @@ var sendToMothership = function () {
     if (players.length > 0) {
         io.sockets.emit("mothership", players);
     } else {
-        io.sockets.emit("mothership", {message : "noplayers"})
+        io.sockets.emit("mothership", {message: "noplayers"})
     }
 };
 
@@ -153,13 +154,13 @@ io.sockets.on('connection', function (socket) {
     var self_socket = socket;
 
 
-
     socket.on('player_data', function (data) {
         var player = {
             "player": {
                 "uid": data.uid,
                 "color": data.color,
-                "gyro": data.gyro
+                "gyro": data.gyro,
+                "sound": data.sound
             }
         };
 //        console.log("connection incoming from ",data);
