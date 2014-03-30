@@ -5,6 +5,10 @@ var Player = function(args) {
   this.ballMeshes = [];
   this.forceScale = 0.01;
 
+  this.playerRotation = new THREE.Vector3(0, 1, 0);
+  this.targetplayerRotation = new THREE.Vector3(0, 0, 0);
+  this.oldGyroRotation = new THREE.Vector3(-999, 0, 0);
+
   this.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
   this.shootDirection = new THREE.Vector3();
   this.shootVelo = 3;
