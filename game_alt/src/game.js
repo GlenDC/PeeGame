@@ -283,7 +283,7 @@ $(function() {
         boxes[i].quaternion.copy(boxMeshes[i].quaternion);
       }
 
-      player.setShootDirection( controls );
+      player.setShootDirection( controls.getMouseDir() );
 
       // Shoot ballz
       if ( controls.enabled == true ) { player.pee(); }

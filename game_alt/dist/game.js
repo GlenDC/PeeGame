@@ -283,7 +283,7 @@ $(function() {
         boxes[i].quaternion.copy(boxMeshes[i].quaternion);
       }
 
-      player.setShootDirection( controls );
+      player.setShootDirection( controls.getMouseDir() );
 
       // Shoot ballz
       if ( controls.enabled == true ) { player.pee(); }
@@ -315,7 +315,7 @@ $(function() {
   this.shootDirection = new THREE.Vector3();
   this.shootVelo = 3;
   this.projector = new THREE.Projector();
-  this.vectorForward = new THREE.Vector3(0, 0, -1);
+  this.vectorForward = new THREE.Vector3(0, 0, 1);
 };
 
 Player.prototype.pee = function() {
@@ -358,7 +358,8 @@ Player.prototype.pee = function() {
 Player.prototype.setShootDirection = function( mouseRotation ) {
   var quat = new THREE.Quaternion();
   quat.setFromEuler({x:mouseRotation.x, y:mouseRotation.y, z:0},"XYZ");
-  this.shootDirection = mouseRotation * this.vectorForward;
+  console.log(mouseRotation);
+  quat.multiplyVector3(this.vectorForward, this.shootDirection);
 }
 
 Player.prototype.updateBalls = function() {

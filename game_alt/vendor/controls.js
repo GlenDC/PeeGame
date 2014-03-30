@@ -74,22 +74,6 @@ var PointerLockControls = function ( camera, cannonBody ) {
 
     inputVelocity.set(0,0,0);
 
-    /*
-    if ( moveForward ){
-      inputVelocity.z = -velocityFactor * delta;
-    }
-    if ( moveBackward ){
-      inputVelocity.z = velocityFactor * delta;
-    }
-
-    if ( moveLeft ){
-      inputVelocity.x = -velocityFactor * delta;
-    }
-    if ( moveRight ){
-      inputVelocity.x = velocityFactor * delta;
-    }
-    */
-
     // Convert velocity to world coordinates
     // quat.setFromEuler({x:pitchObject.rotation.x, y:yawObject.rotation.y, z:0},"XYZ");
     // quat.multiplyVector3(inputVelocity);
