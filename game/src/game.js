@@ -21,13 +21,22 @@ $(function() {
   window.Resources = {};
   var player = new Player({});
 
+  var setPlayerColors = function(playerData) {
+    if (playerData.length <= 0) return;
+    var dude = playerData[0].player;
+    if ( !player.color && dude ) {
+      player.setPeeColor(parseInt(dude.color, 16));
+    }
+  };
   Game.socket.on('mothership', function (o) {
-    if (!o.init) { Game.playerData = o; }
+    if (!o.init) {
+      Game.playerData = o;
+      setPlayerColors(o);
+    }
   });
 
   Resources.ballShape = new CANNON.Sphere(0.03);
   Resources.ballGeometry = new THREE.SphereGeometry(Resources.ballShape.radius);
-  Resources.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
 
   Game.scene = new THREE.Scene();
   Game.camera = null;
@@ -316,7 +325,8 @@ $(function() {
 
   function animate() {
     if (Game.playerData.length && Game.playerData[0]) {
-      var gyro = Game.playerData[0].player.gyro;
+      var dude = Game.playerData[0].player;
+      var gyro   = dude.gyro;
       var gyroVector = generateRotationVector(gyro.beta, gyro.alpha);
 
       var tmpGyroVector = new THREE.Vector3();
@@ -367,15 +377,4 @@ $(function() {
     time = Date.now();
   }
 
-  // Particles
-  var particles = new THREE.Geometry;
-  for (var p = 0; p < 2000; p++) {
-    var particle = new THREE.Vector3(Math.random() * 500 - 250, Math.random() * 500 - 250, Math.random() * 500 - 250);
-    particles.vertices.push(particle);
-  }
-
-  var particleMaterial  = new THREE.ParticleBasicMaterial({ color: 0xeeeeee, size: 2 });
-  var particleSystem    = new THREE.ParticleSystem(particles, particleMaterial);
-
-  Game.scene.add(particleSystem);
 });
