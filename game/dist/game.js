@@ -164,7 +164,7 @@ $(function() {
     var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
         physicsMaterial,
         0.0, // friction coefficient
-        0.3  // restitution
+        0.0  // restitution
         );
     // We must add the contact materials to the world
     Game.world.addContactMaterial(physicsContactMaterial);
@@ -274,10 +274,10 @@ $(function() {
     }
 
     // Add cans
-    var halfExtents = new CANNON.Vec3(0.25,0.5,0.25);
+    var halfExtents = new CANNON.Vec3(0.3,0.5,0.5);
     var boxShape = new CANNON.Box(halfExtents);
-    //var boxShape = new CANNON.Cylinder(0.25,0.25,2*0.25,10);
-    var boxGeometry = new THREE.CubeGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
+    // var boxShape = new CANNON.Cylinder(0.25, 0.50, 0.25, 10);
+    var boxGeometry = new THREE.CylinderGeometry(0.25, 0.25, 0.50, 10);
     //var boxGeometry = new CANNON.RigidBody(mass,boxShape);
     var maesImage = new THREE.MeshLambertMaterial({
         map: THREE.ImageUtils.loadTexture('../res/images/maes_texture.jpeg')
@@ -286,7 +286,7 @@ $(function() {
 
     for(var i=0; i<8; i++){
       var x =  -i + 3;
-      var y = 4;
+      var y = 3;
       var z = -4.2;
       var boxBody = new CANNON.RigidBody(5,boxShape);
       var boxMesh = new THREE.Mesh( boxGeometry, maesImage );
@@ -301,7 +301,7 @@ $(function() {
       boxMeshes.push(boxMesh);
     }
 
-    var rows = 3;
+    var rows = 4;
 
     var minX = 3;
     var maxX = minX + 6;
@@ -309,10 +309,10 @@ $(function() {
     var width = halfExtents.y + 0.01;
 
     for(var rowI=0; rowI<rows; rowI++) {
-      var boxCount = 9 - rowI;
+      var boxCount = 8 - rowI;
       for(var i=0; i < boxCount; i++){
         var w = xWidth / boxCount
-        var x = (-i * w) + 3;
+        var x = (-i * w * 0.9) + 3;
         var y = 1 + rowI;
         var z = -3.2;
 
@@ -574,7 +574,7 @@ $(function() {
   this.targetplayerRotation = new THREE.Vector3(0, 0, 0);
   this.oldGyroRotation = new THREE.Vector3(-999, 0, 0);
 
-  this.peeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
+  this.peeMaterial = new THREE.MeshLambertMaterial({ color: 0xFFFF00 } );
   this.shootDirection = new THREE.Vector3();
   this.shootVelo = 3;
   this.projector = new THREE.Projector();
